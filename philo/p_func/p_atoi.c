@@ -6,17 +6,33 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 12:10:56 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/04 15:29:34 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/04 23:30:24 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-size_t	p_atoi(char *arg)
+size_t	p_atoi(const char *str)
 {
-	// 음수 안됨 
-	// size_t 범위가 가변적이기 때문에
-	// 
-	// zu(size_t) 범위에 드는지 확인
-	// 범위 
+	int	i;
+	long long	res;
+
+	i = 0; // 음수 안됨 
+	res = 0;
+	while (str[i] == ' ' || str[i] == '\n' || str[i] == '\t'
+		|| str[i] == '\v' || str[i] == '\f' || str[i] == '\r')
+		i++;
+	if (str[i] == '-')
+		return (ERROR);
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		if (!res)
+			return (res);
+		else if (res > 2147483647)
+			return (ERROR);
+		else
+			res = res * 10 + (str[i] - '0');
+		i++;
+	}
+	return ((int) res);
 }

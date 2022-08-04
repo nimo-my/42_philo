@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 18:18:43 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/04 17:31:58 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/04 23:28:45 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,11 @@
 # include <unistd.h>
 # include <stdio.h> // printf
 # include <stdbool.h>
+// #include <string.h> // for debug
 
-# define ERROR	1
-# define OK		0
+# define ERROR		0
+# define OK			1
+# define RET_ERROR	1
 
 // typedef pthread_mutex_t p_mutex;
 
@@ -30,8 +32,6 @@ typedef struct s_philo
 	int				id;
 	int				left_fork;
 	int				right_fork;
-	// pthread_mutex_t	m_fork;
-
 
 }	t_philo;
 
@@ -44,12 +44,46 @@ typedef struct s_info
 	int	time_to_sleep;
 	int	num_must_eat; // if argv == 6 only
 
-
-	int*				permit_fork; // default all 1
-	pthread_t			*tid_arr; // 나중에 스레드 만들면서 넣어줄 것임! 
-	pthread_mutex_t		*mutex_arr;
+	int					*permit_fork; // default all 1
+	pthread_t			*t_id_arr; // 나중에 스레드 만들면서 넣어줄 것임! 
+	// pthread_mutex_t		*m_sth_arr; // 뮤텍스는 공유자원
+	pthread_mutex_t		*m_print_arr; // 뮤텍스는 공유자원
 
 }	t_info;
 
+/* ************************************************************************** */
+// 	p_func
+/* ************************************************************************** */
+
+size_t	p_atoi(const char *str);
+char	*p_malloc(size_t size);
+void	*p_memset(void *b, int c, size_t len);
+
+/* ************************************************************************** */
+// 	src
+/* ************************************************************************** */
+
+// init_info.c
+t_info	*make_info_struct(int argc, char *argv[]);
+void	init_info_input(int argc, char *argv[], t_info *info);
+void	init_info_arr(t_info *info);
+int		set_info_and_return(int argc, t_info *info); 
+
+// init_philo.c
+
+t_philo	*make_philo_struct(void);
+
+
+// fork.c
+// void	pickup_forks(t_info info, t_philo philo);
+// void	return_forks(int philo->id);
+
+
+//philo.c
+void	*even_philo(t_philo *philo);
+void	*odd_philo(t_philo *philo);
+
+//print.c
+void	print(char *message);
 
 #endif

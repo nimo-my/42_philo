@@ -1,26 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   p_malloc.c                                         :+:      :+:    :+:   */
+/*   p_memset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/04 12:11:02 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/04 22:21:12 by jisookim         ###   ########.fr       */
+/*   Created: 2022/08/04 21:28:38 by jisookim          #+#    #+#             */
+/*   Updated: 2022/08/04 22:36:07 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-char	*p_malloc(size_t size)
+void	*p_memset(void *b, int c, size_t len)
 {
-	char	*ret;
+	unsigned char	*copy_b;
+	size_t			i;
 
-	ret = (char *)malloc(size);
-	if (!ret)
+	copy_b = (unsigned char *)b;
+	i = 0;
+	while (len--)
 	{
-		free(ret);
-		printf("error!\n");
+		copy_b[i] = (unsigned char)c;
+		i++;
 	}
-	return (ret);
+	return (b);
 }
