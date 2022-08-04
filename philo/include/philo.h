@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 18:18:43 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/02 21:28:17 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/04 17:31:58 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,41 @@
 
 # include <pthread.h>
 # include <stdlib.h>
-# include <sys/time.h>
+# include <sys/time.h> // gettimeofday
 # include <unistd.h>
-# include <stdio.h>
+# include <stdio.h> // printf
 # include <stdbool.h>
 
-struct s_philo
-{
-	size_t	philo_id;
-	size_t	time_die;
-	size_t	time_eat;
-	size_t	time_sleep;
-	size_t	num_of_time_must_eat;
-	size_t	left_fork_num;
-	size_t	right_fork_num;
+# define ERROR	1
+# define OK		0
 
+// typedef pthread_mutex_t p_mutex;
+
+typedef struct s_philo
+{
+	int				id;
+	int				left_fork;
+	int				right_fork;
+	// pthread_mutex_t	m_fork;
 
 
 }	t_philo;
 
-struct s_info
+
+typedef struct s_info
 {
-	size_t	num_philo;
+	int	num_philo;
+	int	time_to_die;
+	int	time_to_eat;
+	int	time_to_sleep;
+	int	num_must_eat; // if argv == 6 only
+
+
+	int*				permit_fork; // default all 1
+	pthread_t			*tid_arr; // 나중에 스레드 만들면서 넣어줄 것임! 
+	pthread_mutex_t		*mutex_arr;
 
 }	t_info;
+
 
 #endif
