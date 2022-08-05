@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 18:18:43 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/04 23:28:45 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/05 12:19:42 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,13 @@ typedef struct s_philo
 	int				id;
 	int				left_fork;
 	int				right_fork;
+	void			*info_struct;
 
-}	t_philo;
+
+
+
+
+}					t_philo;
 
 
 typedef struct s_info
@@ -44,12 +49,14 @@ typedef struct s_info
 	int	time_to_sleep;
 	int	num_must_eat; // if argv == 6 only
 
+	t_philo				*philos;
+
 	int					*permit_fork; // default all 1
 	pthread_t			*t_id_arr; // 나중에 스레드 만들면서 넣어줄 것임! 
-	// pthread_mutex_t		*m_sth_arr; // 뮤텍스는 공유자원
+	pthread_mutex_t		*m_fork_arr; // 뮤텍스는 공유자원
 	pthread_mutex_t		*m_print_arr; // 뮤텍스는 공유자원
 
-}	t_info;
+}						t_info;
 
 /* ************************************************************************** */
 // 	p_func
@@ -57,7 +64,9 @@ typedef struct s_info
 
 size_t	p_atoi(const char *str);
 char	*p_malloc(size_t size);
+char	**p_double_malloc(size_t size);
 void	*p_memset(void *b, int c, size_t len);
+void	*p_memcpy(void *dest, const void *src, size_t n);
 
 /* ************************************************************************** */
 // 	src
@@ -70,8 +79,9 @@ void	init_info_arr(t_info *info);
 int		set_info_and_return(int argc, t_info *info); 
 
 // init_philo.c
+t_philo	*init_philo(t_info *info);
+void	make_philos(t_info *info);
 
-t_philo	*make_philo_struct(void);
 
 
 // fork.c
@@ -80,8 +90,8 @@ t_philo	*make_philo_struct(void);
 
 
 //philo.c
-void	*even_philo(t_philo *philo);
-void	*odd_philo(t_philo *philo);
+void	*even_philo(void *arg);
+void	*odd_philo(void *arg);
 
 //print.c
 void	print(char *message);

@@ -1,43 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   p_malloc.c                                         :+:      :+:    :+:   */
+/*   p_memcpy.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/04 12:11:02 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/05 09:43:09 by jisookim         ###   ########.fr       */
+/*   Created: 2022/08/05 11:30:53 by jisookim          #+#    #+#             */
+/*   Updated: 2022/08/05 11:31:54 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-char	*p_malloc(size_t size)
+void	*p_memcpy(void *dest, const void *src, size_t n)
 {
-	char	*ret;
+	unsigned char	*copy_dest;
+	unsigned char	*copy_src;
 
-	ret = (char *)malloc(size);
-	if (!ret)
-	{
-		free(ret);
-		ret = NULL;
-	}
-	return (ret);
-}
-
-char	**p_double_malloc(size_t size)
-{
-	char	**ret;
-	int		i;
-
-	i = 0;
-	ret = (char **)malloc(size);
-	if (!ret)
-	{
-		while (ret[i])
-			free(ret[i]);
-		free(ret);
-		ret = NULL;
-	}
-	return (ret);
+	copy_dest = (unsigned char *) dest;
+	copy_src = (unsigned char *) src;
+	if (!dest && !src)
+		return (NULL);
+	if (!n)
+		return (dest);
+	while (n--)
+		*(copy_dest++) = *(copy_src++);
+	return (dest);
 }

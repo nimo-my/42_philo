@@ -6,45 +6,20 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 15:33:20 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/04 22:28:05 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/05 12:14:45 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	*even_philo(t_philo *philo)
+void	*odd_philo(void *arg)
 {
-	philo->id = (int)philo->id;
+	// 구조체 만들고 할당
+	t_philo *this_philo;
 
-	printf("[eve] [%d] 필로 생성됨!\n", philo->id);
-	// // [pick up left fork]
-	// pickup_forks(philo->id);
-	// //printf("[%d] %d has taken a fork.(%d)\n", philo->id);
-
-	// // [pick up right fork]
-	// pickup_forks(philo->id + 1);
-	// // printf("philo(%d)가 포크(%d)를 집었습니다.\n", philo->id, (philo->id + 1) % NUM_THREADS);
-	// // printf("philo(%d)가 먹기 시작했습니다.\n", philo->id);
-	// sleep(2);
-	// // printf("philo(%d)가 다 먹었습니다.\n", philo->id);
-
-	// // [put down right fork]
-	// return_forks(philo->id + 1);
-	// // printf("philo(%d)가 포크(%d)를 내려놓았습니다.\n", philo->id, (philo->id + 1) % NUM_THREADS);
-
-	// // [put down left fork]
-	// return_forks(philo->id);
-	// // printf("philo(%d)가 포크(%d)를 내려놓았습니다.\n", philo->id, philo->id);
-
-	return (NULL);
-}
-
-void	*odd_philo(t_philo *philo)
-{
-	philo->id = (int)philo->id;
-
-	printf("[odd] [%d] 필로 생성됨!\n", philo->id);
-
+	this_philo = (t_philo *)arg;
+	
+	printf("[odd] [%d] 필로 생성됨!\n", this_philo->id);
 	// // [pick up right fork]
 	// pickup_forks(philo->id + 1);
 	// // printf("philo(%d)가 포크(%d)를 집었습니다.\n", philo->id, (philo->id + 1) % NUM_THREADS);
@@ -63,6 +38,37 @@ void	*odd_philo(t_philo *philo)
 	// // [put down right fork]
 	// return_forks(philo->id + 1);
 	// // printf("philo(%d)가 포크(%d)를 내려놓았습니다.\n", philo->id, (philo->id + 1) % NUM_THREADS);
+
+	return (NULL);
+}
+
+
+void	*even_philo(void *arg)
+{
+	// 구조체 만들고 할당
+	t_philo *this_philo;
+
+	this_philo = (t_philo *)arg;
+	
+	printf("[eve] [%d] 필로 생성됨!\n", this_philo->id);
+	// // [pick up left fork]
+	// pickup_forks(philo->id);
+	// //printf("[%d] %d has taken a fork.(%d)\n", philo->id);
+
+	// // [pick up right fork]
+	// pickup_forks(philo->id + 1);
+	// // printf("philo(%d)가 포크(%d)를 집었습니다.\n", philo->id, (philo->id + 1) % NUM_THREADS);
+	// // printf("philo(%d)가 먹기 시작했습니다.\n", philo->id);
+	// sleep(2);
+	// // printf("philo(%d)가 다 먹었습니다.\n", philo->id);
+
+	// // [put down right fork]
+	// return_forks(philo->id + 1);
+	// // printf("philo(%d)가 포크(%d)를 내려놓았습니다.\n", philo->id, (philo->id + 1) % NUM_THREADS);
+
+	// // [put down left fork]
+	// return_forks(philo->id);
+	// // printf("philo(%d)가 포크(%d)를 내려놓았습니다.\n", philo->id, philo->id);
 
 	return (NULL);
 }
