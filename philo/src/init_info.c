@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 11:46:26 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/07 02:42:53 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/07 03:22:27 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ t_info	*make_info_struct(int argc, char *argv[])
 
 	info = (t_info *)p_malloc(sizeof(t_info));
 	p_memset(info, 0, sizeof(t_info));
-	set_info_struct(info);
 	init_info_argv(argc, argv, info);
+	set_info_struct(info);
 	return (info);
 }
 
@@ -37,9 +37,6 @@ void	set_info_struct(t_info *info)
 
 void	init_info_argv(int argc, char *argv[], t_info *info)
 {
-	int	i;
-
-	i = -1;
 	if (argc == 5 || argc == 6)
 	{
 		info->num_philo = p_atoi(argv[1]);

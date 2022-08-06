@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 15:33:20 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/07 02:49:27 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/07 03:30:11 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,12 @@ int	make_philos(t_info *info)
 	i = 0;
 	while (i < info->num_philo)
 	{
-		printf("[-]info->philo[%d] id : %d, 오른쪽포크 : %d, 왼쪽포크 : %d \n",i, info->philos[i].id, info->philos[i].right_fork, info->philos[i].left_fork);
-		pthread_create(&info->t_id_arr[i], NULL, philos_eat, NULL);
-		printf("info->philo[%d] id : %d, 오른쪽포크 : %d, 왼쪽포크 : %d \n\n",i, info->philos[i].id, info->philos[i].right_fork, info->philos[i].left_fork);
+		//printf("%p [1]info->philo[%d] id : %d, 오른쪽포크 : %d, 왼쪽포크 : %d \n",&info->philos[i], i, info->philos[i].id, info->philos[i].right_fork, info->philos[i].left_fork);
+		pthread_create(&info->t_id_arr[i], NULL, philos_eat, &info->philos[i]);
+	//	printf("%p [2]info->philo[%d] id : %d, 오른쪽포크 : %d, 왼쪽포크 : %d \n",&info->philos[i], i, info->philos[i].id, info->philos[i].right_fork, info->philos[i].left_fork);
 		i++;
 	}
+	
 	return (OK);
 }
 
@@ -35,13 +36,14 @@ void	init_philo(t_info *info)
 	i = 0;
 	while (i < info->num_philo)
 	{
-		(&info->philos[i])->go_info = info;
-		(&info->philos[i])->id = i;
-		(&info->philos[i])->right_fork = i;
-		if ((&info->philos[i])->id > 0)
-			(&info->philos[i])->left_fork = i - 1;
+		info->philos[i].go_info = (t_info *)p_malloc(sizeof(t_info));
+		info->philos[i].go_info = info;
+		info->philos[i].id = i;
+		info->philos[i].right_fork = i;
+		if (info->philos[i].id > 0)
+			info->philos[i].left_fork = i - 1;
 		else
-			(&info->philos[i])->left_fork = info->num_philo;
+			info->philos[i].left_fork = info->num_philo;
 		// printf("info->philo[%d] id : %d, 오른쪽포크 : %d, 왼쪽포크 : %d \n",i, info->philos[i].id, info->philos[i].right_fork, info->philos[i].left_fork);
 		
 		i++;
@@ -54,43 +56,39 @@ void	*philos_eat(void *arg)
 	t_philo	*this_philo;
 	this_philo = (t_philo *)arg;
 	
-	printf("%p\n", this_philo);
-	
-	// if (this_philo->id % 2)
-	// 	odd_philo(this_philo);
-	// else
-	// 	even_philo(this_philo);
+	if (this_philo->id % 2)
+		odd_philo(this_philo);
+	else
+		even_philo(this_philo);
 	return (NULL);
 }
 
 void	odd_philo(t_philo *philo)
 {
 	(void)philo;
-// 	long	start_eat_time;
-// 	long	end_eat_time;
+	long	start_eat_time;
+	long	end_eat_time;
 
-	//start_eat_time = set_time(philo->go_info->start_time);
-
-	//end_eat_time = set_time(philo->go_info->end_time);
-	//printf("id : %d ,time : [%ld] \n",philo->id, end_eat_time-start_eat_time);
+	start_eat_time = set_time(philo->go_info->start_time);
+	end_eat_time = set_time(philo->go_info->end_time);
 	
-	// printf("id : %d ,time : [%ld] \n",philo->id, end_eat_time-start_eat_time);
-	// pick_right_fork(philo);
-	// pick_left_fork(philo);
-	// start_eat_time = set_time(philo->go_info->start_time);
-	// sleep(1);
-	// end_eat_time = set_time(philo->go_info->end_time);
-	// printf("id : %d ,time : [%ld] [%ld] res: [%ld]\n",philo->id, start_eat_time, end_eat_time, end_eat_time-start_eat_time);
-	// [pick up right fork]
+	printf("id : %d ,time : [%ld] \n",philo->id, end_eat_time-start_eat_time);
+	pick_right_fork(philo);
+	pick_left_fork(philo);
+	start_eat_time = set_time(philo->go_info->start_time);
+	sleep(1);
+	end_eat_time = set_time(philo->go_info->end_time);
+	printf("id : %d ,time : [%ld] [%ld] res: [%ld]\n",philo->id, start_eat_time, end_eat_time, end_eat_time-start_eat_time);
+	[pick up right fork]
 
 
-	// if ((pick_right_fork(philo) != RET_ERROR) && (pick_left_fork(philo) != RET_ERROR))
-	// {
-	// 	start_eat_time = set_time(philo->go_info->start_time);
-	// 	sleep(1);
-	// 	end_eat_time = set_time(philo->go_info->end_time);
-	// 	printf("id : %d ,time : [%ld] [%ld] res: [%ld]\n",philo->id, start_eat_time, end_eat_time, end_eat_time-start_eat_time);
-	// }
+	if ((pick_right_fork(philo) != RET_ERROR) && (pick_left_fork(philo) != RET_ERROR))
+	{
+		start_eat_time = set_time(philo->go_info->start_time);
+		sleep(1);
+		end_eat_time = set_time(philo->go_info->end_time);
+		printf("id : %d ,time : [%ld] [%ld] res: [%ld]\n",philo->id, start_eat_time, end_eat_time, end_eat_time-start_eat_time);
+	}
 }
 
 void	even_philo(t_philo *philo)

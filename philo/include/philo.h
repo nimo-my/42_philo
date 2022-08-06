@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 18:18:43 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/07 00:18:05 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/07 02:53:49 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct s_philo
 	int				left_fork;
 	int				right_fork;
 	struct s_info	*go_info;
+
 	long			eat_nothing;
 	long			eat_time;
 
