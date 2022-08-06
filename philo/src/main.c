@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 20:10:57 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/06 20:34:19 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/07 00:55:43 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,20 @@ int main(int argc, char *argv[])
 
 	// [set] & [init]
 	info = make_info_struct(argc, argv);
-	if (!info || check_argv(argc, info) == RET_ERROR)
+	if (!info || check_argv(argc, info) == RET_ERROR || !set_time(info->start_time))
 		return (RET_ERROR);
 	else // for debug
 	{
-		printf("info->num_philo: %d\n", info->num_philo);
-		printf("info->ttd: %d\n", info->time_to_die);
-		printf("info->tte: %d\n", info->time_to_eat);
-		printf("info->tts: %d\n", info->time_to_sleep);
-		printf("info->nme: %d\n", info->num_must_eat);
+		printf("[main] num of phil: %d\n", info->num_philo);
+		printf("[main] time to die: %d\n", info->time_to_die);
+		printf("[main] time to eat: %d\n", info->time_to_eat);
+		printf("[main] time to slp: %d\n", info->time_to_sleep);
+		printf("[main] num mus eat: %d\n", info->num_must_eat);
 	}
 	
 	// [do] : 필로소퍼 생성(스레드 생성)
 	make_philos(info);
-	start_simulation(info);
+	
 
 	// // - 필로소퍼 생성 완료하면 시간재고 시뮬레이션 시작
 	// // 

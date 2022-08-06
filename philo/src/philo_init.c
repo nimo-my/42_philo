@@ -6,96 +6,105 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 15:33:20 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/06 20:39:11 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/07 01:53:01 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	make_philos(t_info *info)
+int	make_philos(t_info *info)
+{
+	int i;
+
+	init_philo(info);
+	i = 0;
+	while (i < info->num_philo)
+	{
+		//printf("info->philo[%d] id : %d, 오른쪽포크 : %d, 왼쪽포크 : %d \n",i, info->philos[i].id, info->philos[i].right_fork, info->philos[i].left_fork);
+		if (pthread_create(&info->t_id_arr[i], NULL, philos_eat, &info->philos[i]))
+			return (RET_ERROR);
+		i++;
+	}
+	return (OK);
+}
+
+void	init_philo(t_info *info)
 {
 	int	i;
 
 	i = 0;
 	while (i < info->num_philo)
 	{
-		if (i % 2) // 홀수
-			pthread_create(&info->t_id_arr[i], NULL, odd_philo, &info->philos[i]);
-		else
-			pthread_create(&info->t_id_arr[i], NULL, even_philo, &info->philos[i]);
-		
-		(&info->philos[i])->info_struct = info;
+		(&info->philos[i])->go_info = info;
 		(&info->philos[i])->id = i;
 		(&info->philos[i])->right_fork = i + 1;
-
 		if ((&info->philos[i])->id > 0)
 			(&info->philos[i])->left_fork = i - 1;
-		else	
+		else
 			(&info->philos[i])->left_fork = info->num_philo;
-		//printf("id : %d\n", info->philos[i].id);
-		//printf("info->philo[%d] id : %d, 오른쪽포크 : %d, 왼쪽포크 : %d \n",i, info->philos[i].id, info->philos[i].right_fork, info->philos[i].left_fork);
+		// printf("info->philo[%d] id : %d, 오른쪽포크 : %d, 왼쪽포크 : %d \n",i, info->philos[i].id, info->philos[i].right_fork, info->philos[i].left_fork);
+		
 		i++;
 	}
 }
 
-
-void	*odd_philo(void *arg)
+void	*philos_eat(void *arg)
 {
-	// 구조체 만들고 할당
 	t_philo	*this_philo;
-
+	
 	this_philo = (t_philo *)arg;
-
-	// printf("[odd] [%d] 필로 생성됨!\n", this_philo->id);
-	// // [pick up right fork]
-	// pickup_forks(philo->id + 1);
-	// // printf("philo(%d)가 포크(%d)를 집었습니다.\n", philo->id, (philo->id + 1) % NUM_THREADS);
-
-	// // [pick up left fork]
-	// pickup_forks(philo->id);
-	// // printf("philo(%d) 가 포크(%d)를 집었습니다.\n", philo->id, philo->id);
-	// // printf("philo(%d)가 먹기 시작했습니다.\n", philo->id);
-	// sleep(2);
-	// // printf("philo(%d)가 다 먹었습니다.\n", philo->id);
-
-	// // [put down left fork]
-	// return_forks(philo->id);
-	// // printf("philo(%d)가 포크(%d)를 내려놓았습니다.\n", philo->id, philo->id);
-
-	// // [put down right fork]
-	// return_forks(philo->id + 1);
-	// // printf("philo(%d)가 포크(%d)를 내려놓았습니다.\n", philo->id, (philo->id + 1) % NUM_THREADS);
-
+	if (this_philo->id % 2) // 홀수
+		odd_philo(this_philo);
+	else
+		even_philo(this_philo);
 	return (NULL);
 }
 
-
-void	*even_philo(void *arg)
+void	odd_philo(t_philo *philo)
 {
-	// 구조체 만들고 할당
-	t_philo *this_philo;
+	long	start_eat_time;
+	long	end_eat_time;
 
-	this_philo = (t_philo *)arg;
+	start_eat_time = set_time(philo->go_info->start_time);
+	end_eat_time = set_time(philo->go_info->end_time);
+	//printf("id : %d ,time : [%ld] \n",philo->id, end_eat_time-start_eat_time);
+	
+	// printf("id : %d ,time : [%ld] \n",philo->id, end_eat_time-start_eat_time);
+	// pick_right_fork(philo);
+	// pick_left_fork(philo);
+	// start_eat_time = set_time(philo->go_info->start_time);
+	// sleep(1);
+	// end_eat_time = set_time(philo->go_info->end_time);
+	// printf("id : %d ,time : [%ld] [%ld] res: [%ld]\n",philo->id, start_eat_time, end_eat_time, end_eat_time-start_eat_time);
+	// [pick up right fork]
 
-	// printf("[eve] [%d] 필로 생성됨!\n", this_philo->id);
-	// // [pick up left fork]
-	// pickup_forks(philo->id);
-	// //printf("[%d] %d has taken a fork.(%d)\n", philo->id);
 
-	// // [pick up right fork]
-	// pickup_forks(philo->id + 1);
-	// // printf("philo(%d)가 포크(%d)를 집었습니다.\n", philo->id, (philo->id + 1) % NUM_THREADS);
-	// // printf("philo(%d)가 먹기 시작했습니다.\n", philo->id);
-	// sleep(2);
-	// // printf("philo(%d)가 다 먹었습니다.\n", philo->id);
+	// if ((pick_right_fork(philo) != RET_ERROR) && (pick_left_fork(philo) != RET_ERROR))
+	// {
+	// 	start_eat_time = set_time(philo->go_info->start_time);
+	// 	sleep(1);
+	// 	end_eat_time = set_time(philo->go_info->end_time);
+	// 	printf("id : %d ,time : [%ld] [%ld] res: [%ld]\n",philo->id, start_eat_time, end_eat_time, end_eat_time-start_eat_time);
+	// }
+}
 
-	// // [put down right fork]
-	// return_forks(philo->id + 1);
-	// // printf("philo(%d)가 포크(%d)를 내려놓았습니다.\n", philo->id, (philo->id + 1) % NUM_THREADS);
+void	even_philo(t_philo *philo)
+{
 
-	// // [put down left fork]
-	// return_forks(philo->id);
-	// // printf("philo(%d)가 포크(%d)를 내려놓았습니다.\n", philo->id, philo->id);
+	long	start_eat_time;
+	long	end_eat_time;
 
-	return (NULL);
+	start_eat_time = set_time(philo->go_info->start_time);
+	end_eat_time = set_time(philo->go_info->end_time);
+	// printf("id : %d ,time : [%ld] \n",philo->id, end_eat_time-start_eat_time);
+	
+	// [pick up right fork]
+	// if ((pick_right_fork(philo) != RET_ERROR) && (pick_left_fork(philo) != RET_ERROR))
+	// {
+	// 	start_eat_time = set_time(philo->go_info->start_time);
+	// 	sleep(1);
+	// 	end_eat_time = set_time(philo->go_info->end_time);
+	// 	printf("id : %d ,time : [%ld] [%ld] res: [%ld]\n",philo->id, start_eat_time, end_eat_time, end_eat_time-start_eat_time);
+	// }
+
 }
