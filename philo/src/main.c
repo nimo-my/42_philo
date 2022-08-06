@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 20:10:57 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/05 11:47:57 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/06 20:34:19 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,51 +15,23 @@
 int main(int argc, char *argv[])
 {
 	t_info	*info;
-	// t_philo	*philo;
-
-	
 
 	// [set] & [init]
 	info = make_info_struct(argc, argv);
-	// printf("info->num_philo: %d\n", info->num_philo);
-	// printf("info->ttd: %d\n", info->time_to_die);
-	// printf("info->tte: %d\n", info->time_to_eat);
-	// printf("info->tts: %d\n", info->time_to_sleep);
-	// printf("info->nme: %d\n", info->num_must_eat);
-	if (!set_info_and_return(argc, info))
-	{
-		printf("error~\n"); //debug
+	if (!info || check_argv(argc, info) == RET_ERROR)
 		return (RET_ERROR);
+	else // for debug
+	{
+		printf("info->num_philo: %d\n", info->num_philo);
+		printf("info->ttd: %d\n", info->time_to_die);
+		printf("info->tte: %d\n", info->time_to_eat);
+		printf("info->tts: %d\n", info->time_to_sleep);
+		printf("info->nme: %d\n", info->num_must_eat);
 	}
+	
+	// [do] : 필로소퍼 생성(스레드 생성)
 	make_philos(info);
-
-	
-
-	
-	// [do] // -필로소퍼 생성(스레드 생성)
-
-
-	// 뮤텍스초기화
-
-
-	// 	// [[ philo 홀 짝에 따라 다른 스레드 만들기 ]]
-	// 	philo = make_info_philo(philo);
-	// 	philo->id = i;
-	// 	if (i % 2) // 홀수 필로 스레드 생성
-	// 	{
-			
-	// 		pthread_create(&info->tid_arr[i], NULL, odd_philo, (void *)philo);
-	// 	}
-	// 	else // 짝수 필로 스레드 생성
-	// 	{
-		
-	// 			pthread_create(&info->tid_arr[i], NULL, even_philo, (void *)philo);
-	// 	}
-	// 	i++;
-	// }
-
-	// --------------------------------------------------
-	// 중간 정검, 스레드 볼 수 있는 함수로 스레드가 정상적으로 잘 만들어졌는지 확인하고 넘어가자! 
+	start_simulation(info);
 
 	// // - 필로소퍼 생성 완료하면 시간재고 시뮬레이션 시작
 	// // 

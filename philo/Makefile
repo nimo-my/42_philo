@@ -6,7 +6,7 @@
 #    By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/30 18:14:43 by jisookim          #+#    #+#              #
-#    Updated: 2022/08/05 11:46:25 by jisookim         ###   ########.fr        #
+#    Updated: 2022/08/06 20:36:39 by jisookim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,8 +24,8 @@ SRCS_DIR	:=	./src
 SRCS		:=	main.c \
 				fork.c \
 				init_info.c \
-				init_philo.c \
-				philo.c \
+				philo_init.c \
+				philo_do.c \
 				print.c
 SRCS		:=	$(addprefix $(SRCS_DIR)/, $(SRCS))
 
@@ -34,7 +34,9 @@ FSRCS_DIR	:=	./p_func
 FSRCS		:=	p_atoi.c \
 				p_malloc.c \
 				p_memset.c \
-				p_memcpy.c
+				p_memcpy.c \
+				p_error.c \
+				p_strlen.c
 FSRCS		:=	$(addprefix $(FSRCS_DIR)/, $(FSRCS))
 
 # objs

@@ -6,26 +6,11 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 11:46:26 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/05 12:10:11 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/06 20:23:41 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
-
-void set_info(t_info *info)
-{
-	int i;
-
-	i = -1;
-	while (++i < info->num_philo)
-		pthread_mutex_init(&info->m_fork_arr[i], NULL);
-	i = -1;
-	while (++i < info->num_philo)
-		pthread_mutex_init(&info->m_print_arr[i], NULL);
-	// pthread_mutex_init(info->m_fork_arr[i], NULL);
-	// 	pthread_mutex_init(info->m_print_arr[i], NULL);
-		
-}
 
 t_info	*make_info_struct(int argc, char *argv[])
 {
@@ -33,28 +18,24 @@ t_info	*make_info_struct(int argc, char *argv[])
 
 	info = (t_info *)p_malloc(sizeof(t_info));
 	p_memset(info, 0, sizeof(t_info));
-	init_info_arr(info);
-	set_info(info);
-	init_info_input(argc, argv, info);
+	set_info_struct(info);
+	init_info_argv(argc, argv, info);
 	return (info);
 }
 
-void	init_info_arr(t_info *info)
+void	set_info_struct(t_info *info)
 {
-	// permit_fork initialize, default 1.
-	info->permit_fork = (int *)p_malloc(sizeof(int) * info->num_philo);
-	// p_memset(info->permit_fork, 1, sizeof(int) * info->num_philo);
+	info->count = 0;
 	info->philos = (t_philo *)p_malloc(sizeof(t_philo) * info->num_philo);
-	info->t_id_arr = (pthread_t *)p_double_malloc(sizeof(pthread_t) \
+	info->permit_fork = (int *)p_malloc(sizeof(int) * info->num_philo);
+	info->t_id_arr = (pthread_t *)p_malloc(sizeof(pthread_t) \
 															* info->num_philo);
-	info->m_fork_arr = (pthread_mutex_t *)p_double_malloc\
+	info->m_fork_arr = (pthread_mutex_t *)p_malloc\
 								(sizeof(pthread_mutex_t)* info->num_philo);
-	info->m_print_arr = (pthread_mutex_t *)p_double_malloc\
-								(sizeof(pthread_mutex_t)* info->num_philo);
+	
 }
 
-
-void	init_info_input(int argc, char *argv[], t_info *info)
+void	init_info_argv(int argc, char *argv[], t_info *info)
 {
 	int	i;
 
@@ -71,13 +52,28 @@ void	init_info_input(int argc, char *argv[], t_info *info)
 		info->num_must_eat = p_atoi(argv[5]);
 }
 
-int	set_info_and_return(int argc, t_info *info)
+int	check_argv(int argc, t_info *info)
 {
+	int i;
+	int flag;
+
+	i = 0;
+	flag = 0;
 	if (info->num_philo <= 0 || info->time_to_die <= 0 || \
 		info->time_to_eat <= 0 || info->time_to_sleep <= 0)
-			return (ERROR);
+			flag = p_error("ERROR : input value needs to be over 0.");
 	if ((argc == 6) && info->num_must_eat <= 0)
-			return (ERROR);
-
+		flag = p_error("ERROR : input value needs to be over 0.");
+	if (pthread_mutex_init(&(info->m_print), NULL)) //thread init
+		flag = p_error("ERROR : thread initialize error");
+	while (i < info->num_philo)
+	{
+		info->permit_fork[i] = 1;
+		if (pthread_mutex_init(&info->m_fork_arr[i], NULL)) //init fork
+			flag = p_error("ERROR : mutex initialize error");
+		i++;
+	}
+	if (flag == RET_ERROR)
+		return (RET_ERROR);
 	return (OK);
 }
