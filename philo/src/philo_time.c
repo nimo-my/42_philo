@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 22:42:52 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/07 01:12:42 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/07 16:19:03 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,5 +17,5 @@ int	set_time(struct timeval time)
 	if (gettimeofday(&time, NULL))
 		return (RET_ERROR);
 	
-	return (time.tv_sec);
+	return (time.tv_usec);
 }

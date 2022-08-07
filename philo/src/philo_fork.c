@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 16:00:25 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/07 00:51:06 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/07 14:15:59 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,16 @@ int	pick_left_fork(t_philo *this_philo)
 	int	fork_id;
 
 	fork_id = this_philo->left_fork;
-	if (!pthread_mutex_lock(&(this_philo->go_info->m_fork_arr[fork_id])))
+	if (pthread_mutex_lock(&(this_philo->go_info->m_fork_arr[fork_id])))
+	{
 		return (RET_ERROR);
+	}
 	else
 	{
-		printf("get left fork\n");
+		printf("[%d] get left fork \n", this_philo->id);
 	}
+	
+	// printf("left\n");
 	return (OK);
 }
 
@@ -31,16 +35,17 @@ int	pick_right_fork(t_philo *this_philo)
 	int	fork_id;
 
 	fork_id = this_philo->right_fork;
-	if (!pthread_mutex_lock(&this_philo->go_info->m_fork_arr[fork_id]))
+	if (pthread_mutex_lock(&this_philo->go_info->m_fork_arr[fork_id]))
+	{
 		return (RET_ERROR);
+	}
 	else
 	{
-		printf("get right fork\n");
+		printf("[%d] get right fork \n", this_philo->id);
 	}
-	
+	// printf("right\n");
 	return (OK);
 }
-
 
 
 // void	return_forks(int philo->id)

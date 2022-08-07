@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 20:10:57 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/07 00:55:43 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/07 15:29:06 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,12 @@ int main(int argc, char *argv[])
 	}
 	
 	// [do] : 필로소퍼 생성(스레드 생성)
-	make_philos(info);
+	if (!make_philos(info))
+	{
+		printf("finished!\n");
+		return (0);
+	}
+	
 	
 
 	// // - 필로소퍼 생성 완료하면 시간재고 시뮬레이션 시작

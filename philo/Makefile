@@ -6,7 +6,7 @@
 #    By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/30 18:14:43 by jisookim          #+#    #+#              #
-#    Updated: 2022/08/07 02:36:43 by jisookim         ###   ########.fr        #
+#    Updated: 2022/08/07 14:04:10 by jisookim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,7 +56,7 @@ $(NAME)		:	$(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 
 %.o			: %.c $(INCLUDE)
-	$(CC) $(CFLAGS) -g -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 # make commands
 .PHONY		:	all

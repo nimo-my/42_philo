@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 18:18:43 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/07 02:53:49 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/07 16:04:11 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,13 @@
 
 typedef struct s_philo
 {
+	struct s_info	*go_info;
+
 	int				id;				// init in set_info_struct
 	int				left_fork;
 	int				right_fork;
-	struct s_info	*go_info;
+	int				eat_count;
+
 
 	long			eat_nothing;
 	long			eat_time;
@@ -44,6 +47,8 @@ typedef struct s_info
 {
 	struct	timeval 	start_time;
 	struct	timeval 	end_time;
+
+	
 
 	int	num_philo;
 	int	time_to_die;
@@ -92,8 +97,7 @@ int	set_time(struct timeval time);
 int		make_philos(t_info *info);
 void	init_philo(t_info *info);
 void	*philos_eat(void *arg);
-void	odd_philo(t_philo *philo);
-void	even_philo(t_philo *philo);
+void	philo_run(t_philo *philo);
 
 //print.c
 void	print(char *message, t_info info);
