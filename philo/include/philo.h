@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 18:18:43 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/07 16:04:11 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/08 10:58:35 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,15 @@ typedef struct s_philo
 	int				right_fork;
 	int				eat_count;
 
+	long	eat_time;
+	long	sleep_time;
+	long	starve_time;
 
-	long			eat_nothing;
-	long			eat_time;
+	long	check_start;
+	long	check_end;
+
+	struct	timeval	limit_time_start;
+	struct	timeval	limit_time_end;
 
 }					t_philo;
 
@@ -53,6 +59,7 @@ typedef struct s_info
 	int	num_philo;
 	int	time_to_die;
 	int	time_to_eat;
+	int	time_to_think;
 	int	time_to_sleep;
 	int	num_must_eat; // if argv == 6 only
 
@@ -90,6 +97,11 @@ int		check_argv(int argc, t_info *info);
 int	pick_left_fork(t_philo *this_philo);
 int	pick_right_fork(t_philo *this_philo);
 
+// philo_do.c
+int philo_eat(t_philo *philo, long *start_time, long *end_time);
+int	philo_sleep(t_philo *philo, long *start_time, long *end_time);
+
+
 // philo_time.c
 int	set_time(struct timeval time);
 
@@ -97,7 +109,7 @@ int	set_time(struct timeval time);
 int		make_philos(t_info *info);
 void	init_philo(t_info *info);
 void	*philos_eat(void *arg);
-void	philo_run(t_philo *philo);
+int		philo_run(t_philo *philo);
 
 //print.c
 void	print(char *message, t_info info);

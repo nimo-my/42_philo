@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 11:46:26 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/07 03:22:27 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/08 10:10:36 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ void	init_info_argv(int argc, char *argv[], t_info *info)
 	}
 	if (argc == 6)
 		info->num_must_eat = p_atoi(argv[5]);
+	info->time_to_think = info->time_to_die - \
+									(info->time_to_eat + info->time_to_sleep);
 }
 
 int	check_argv(int argc, t_info *info)

@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 16:00:25 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/07 14:15:59 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/08 09:45:48 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	pick_left_fork(t_philo *this_philo)
 	}
 	else
 	{
-		printf("[%d] get left fork \n", this_philo->id);
+		//printf("[%d] get left fork \n", this_philo->id);
 	}
 	
 	// printf("left\n");
@@ -41,7 +41,7 @@ int	pick_right_fork(t_philo *this_philo)
 	}
 	else
 	{
-		printf("[%d] get right fork \n", this_philo->id);
+		//printf("[%d] get right fork \n", this_philo->id);
 	}
 	// printf("right\n");
 	return (OK);

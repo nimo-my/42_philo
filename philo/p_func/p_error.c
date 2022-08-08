@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 20:15:23 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/06 20:25:46 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/08 10:41:23 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,3 +17,4 @@ int	p_error(char *msg)
 	write(2, msg, p_strlen(msg));
 	return(RET_ERROR);
 }
+

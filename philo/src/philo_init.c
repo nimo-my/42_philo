@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 15:33:20 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/07 17:13:53 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/08 11:18:48 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	make_philos(t_info *info)
 	i = 0;
 	while (i < info->num_philo)
 	{
-		printf("i : %d\n", i);
+		//printf("i : %d\n", i);
 		//printf("%p [1]info->philo[%d] id : %d, 오른쪽포크 : %d, 왼쪽포크 : %d \n",&info->philos[i], i, info->philos[i].id, info->philos[i].right_fork, info->philos[i].left_fork);
 		pthread_create(&info->t_id_arr[i], NULL, philos_eat, &info->philos[i]);
 		//printf("%p [2]info->philo[%d] id : %d, 오른쪽포크 : %d, 왼쪽포크 : %d \n",&info->philos[i], i, info->philos[i].id, info->philos[i].right_fork, info->philos[i].left_fork);
@@ -54,11 +54,10 @@ int	make_philos(t_info *info)
 	i = 0;
 	while (i < info->num_philo)
 	{
-		printf("wait \n");
 		pthread_join(info->t_id_arr[i], NULL);
 		i++;
 	}
-	printf("\n end of join \n");
+	printf("\n\033[0;33mend of join \n\033[0m");
 	return (OK);
 }
 
@@ -68,21 +67,21 @@ void	*philos_eat(void *arg)
 	t_philo	*this_philo;
 	this_philo = (t_philo *)arg;
 	
-	philo_run(this_philo);
+	if (philo_run(this_philo))
+		return ("ERROR!\n"); //return (p_error("ERROR : during philo program running.\n"));
 
-	printf("[%d] finished!\n\n", this_philo->id);
+	printf("\033[0;34mphilo [%d] finished!\n\n\033[0m", this_philo->id);
 
 	return (NULL);
 }
 
-void	philo_run(t_philo *philo)
+int	philo_run(t_philo *philo)
 {
-	long	start_eat_time;
-	long	end_eat_time;
+	long	start_time;
+	long	end_time;
 
-	
 	if (philo->id % 2 == 0) // 짝수는 늦게 시작
-		usleep(300);
+		usleep(200);
 	
 	while (philo->eat_count < philo->go_info->num_must_eat)
 	{
@@ -92,31 +91,38 @@ void	philo_run(t_philo *philo)
 		{
 			if (pick_left_fork(philo) != RET_ERROR)
 			{
-				start_eat_time = set_time(philo->go_info->start_time);
-				usleep(philo->go_info->time_to_eat);
-				end_eat_time = set_time(philo->go_info->end_time);
-				printf("[%ld] [%d] philo is eating!\n", end_eat_time-start_eat_time, philo->id);
-				pthread_mutex_unlock(&(philo->go_info->m_fork_arr[philo->left_fork]));
-				pthread_mutex_unlock(&(philo->go_info->m_fork_arr[philo->right_fork]));
-				philo->eat_count++;
-				usleep(100);
+				printf("\n\033[0;33mphilo[%d] philo is thinking...\n\033[0m", philo->id);
+				//thinking
+				philo->check_end = set_time(philo->limit_time_end); // check
+				if (philo->check_start - philo->check_end > philo->starve_time) // starving : if check_start - check_end > starve_time
+				{
+					printf("[] philo : [%d], starve time : [%ld]\n ",philo->id, philo->check_start - philo->check_end);
+					printf("\033[0;31m[%d] philo is dead...\n\033[0m", philo->id);
+					break;
+				}
+				if (!philo_eat(philo, &start_time, &end_time)) //eat
+					return (RET_ERROR); //(p_error("ERROR : during philo eating. \n"));
 			}
 		}
 		else if ((philo->id % 2 == 1) && (pick_left_fork(philo) != RET_ERROR))
 		{
 			if (pick_right_fork(philo) != RET_ERROR)
 			{
-				start_eat_time = set_time(philo->go_info->start_time);
-				usleep(philo->go_info->time_to_eat);
-				end_eat_time = set_time(philo->go_info->end_time);
-				printf("[%ld] [%d] philo is eating!\n", end_eat_time-start_eat_time, philo->id);
-				pthread_mutex_unlock(&(philo->go_info->m_fork_arr[philo->left_fork]));
-				pthread_mutex_unlock(&(philo->go_info->m_fork_arr[philo->right_fork]));
-				philo->eat_count++;
-				usleep(100);
+				printf("\n\033[0;33m[%d] philo is thinking...\n\033[0m", philo->id);
+				//thinking
+				philo->check_end = set_time(philo->limit_time_end); // check
+				if (philo->check_start - philo->check_end > philo->starve_time) // starving : if check_start - check_end > starve_time
+				{
+					printf("\033[0;31m[%d] philo is dead...\n\033[0m", philo->id);
+					break;
+				}
+				if (!philo_eat(philo, &start_time, &end_time)) //eat
+					return (RET_ERROR); //(p_error("ERROR : during philo eating. \n"));
 			}
 		}
-		
+		if (!philo_sleep(philo, &start_time, &end_time)) // sleep time
+			return (RET_ERROR); // p_error("ERROR : during philo sleeping. \n")
+		// think time  (waiting time)
 	}
-
+	return (0);
 }
