@@ -6,7 +6,7 @@
 #    By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/30 18:14:43 by jisookim          #+#    #+#              #
-#    Updated: 2022/08/07 14:04:10 by jisookim         ###   ########.fr        #
+#    Updated: 2022/08/10 10:04:01 by jisookim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ SRCS		:=	main.c \
 				init_info.c \
 				philo_fork.c \
 				philo_init.c \
-				philo_do.c \
+				philo_run.c \
 				philo_time.c \
 				print.c
 SRCS		:=	$(addprefix $(SRCS_DIR)/, $(SRCS))

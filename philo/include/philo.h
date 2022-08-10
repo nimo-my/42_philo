@@ -6,12 +6,16 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 18:18:43 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/08 10:58:35 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/10 10:36:25 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
+
+/* ************************************************************************** */
+// 	INCLUDE
+/* ************************************************************************** */
 
 # include <pthread.h>
 # include <stdlib.h>
@@ -21,41 +25,48 @@
 # include <stdbool.h>
 // #include <string.h> // for debug
 
+/* ************************************************************************** */
+// 	DEFINE
+/* ************************************************************************** */
+
 # define ERROR		0
 # define OK			1
 # define RET_ERROR	-1
 
-// typedef pthread_mutex_t p_mutex;
+# define BEF_SEC_0	0
+# define BEF_SEC_1	1
+# define BEF_SEC_2	2
+# define BEF_SEC_3	3
+
+/* ************************************************************************** */
+// 	STRUCTURE
+/* ************************************************************************** */
+
+// [0]before_sec, [1]before_usec, 
+// [2]after_sec, [3]after_usec
+typedef struct s_time
+{
+	uint64_t	life[4]; 
+	uint64_t	eat[4]; 
+	uint64_t	sleep[4];  
+}				t_time;
 
 typedef struct s_philo
 {
+	struct s_time	*time;
 	struct s_info	*go_info;
 
-	int				id;				// init in set_info_struct
-	int				left_fork;
-	int				right_fork;
-	int				eat_count;
+	int		eat_count;
+	int		id;				// init in set_info_struct
+	int		right_fork;
+	int		left_fork;
 
-	long	eat_time;
-	long	sleep_time;
-	long	starve_time;
+	int		get_one_flag; // 1: GET ONE, 0: Get nothing
 
-	long	check_start;
-	long	check_end;
-
-	struct	timeval	limit_time_start;
-	struct	timeval	limit_time_end;
-
-}					t_philo;
-
+}				t_philo;
 
 typedef struct s_info
 {
-	struct	timeval 	start_time;
-	struct	timeval 	end_time;
-
-	
-
 	int	num_philo;
 	int	time_to_die;
 	int	time_to_eat;
@@ -94,10 +105,10 @@ void	init_info_argv(int argc, char *argv[], t_info *info);
 int		check_argv(int argc, t_info *info); 
 
 // philo_fork.c
-int	pick_left_fork(t_philo *this_philo);
-int	pick_right_fork(t_philo *this_philo);
+int	pick_fork(t_philo *this_philo, int fork_position);
 
-// philo_do.c
+// philo_run.c
+int	philo_run(t_philo *philo);
 int philo_eat(t_philo *philo, long *start_time, long *end_time);
 int	philo_sleep(t_philo *philo, long *start_time, long *end_time);
 
@@ -106,10 +117,11 @@ int	philo_sleep(t_philo *philo, long *start_time, long *end_time);
 int	set_time(struct timeval time);
 
 //philo_init.c
-int		make_philos(t_info *info);
 void	init_philo(t_info *info);
-void	*philos_eat(void *arg);
-int		philo_run(t_philo *philo);
+int		philo_init_input(t_info *info);
+int		philo_create_thread(t_info *info);
+int		philo_collect_all_thread(t_info *info);
+
 
 //print.c
 void	print(char *message, t_info info);
