@@ -6,21 +6,20 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 15:58:25 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/06 19:45:18 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/10 14:26:05 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	print(char *message, t_info info)
+int	print(char *message, t_philo *philo)
 {
-	// mutex
-	
-
-	// print
-	(void)message;	
-	(void)info;
-	printf("%s\n", message);
-	// unlock mutex
+	if (pthread_mutex_lock(&philo->go_info->m_print)) // mutex
+		return (RET_ERROR);
+	printf("%s\n", message); // print
+	if (pthread_mutex_unlock(&philo->go_info->m_print)) // unlock mutex
+		return (RET_ERROR);
+	return (OK);
 }
+
 

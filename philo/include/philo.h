@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 18:18:43 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/10 10:36:25 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/10 14:59:13 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,18 @@
 // 	STRUCTURE
 /* ************************************************************************** */
 
-// [0]before_sec, [1]before_usec, 
-// [2]after_sec, [3]after_usec
+// [0]before_time, [1]after_time [2]gap result
 typedef struct s_time
 {
-	uint64_t	life[4]; 
-	uint64_t	eat[4]; 
-	uint64_t	sleep[4];  
+	uint64_t	life_time[3]; 
+	uint64_t	eat_time[3]; 
+	uint64_t	sleep_time[3];  
+
+	// [0]start, [1]end
+	struct timeval	life[2]; 
+	struct timeval	eat[2]; 
+	struct timeval	sleep[2];  
+
 }				t_time;
 
 typedef struct s_philo
@@ -114,16 +119,17 @@ int	philo_sleep(t_philo *philo, long *start_time, long *end_time);
 
 
 // philo_time.c
-int	set_time(struct timeval time);
+long	set_time(struct timeval time);
+
 
 //philo_init.c
-void	init_philo(t_info *info);
-int		philo_init_input(t_info *info);
+int		init_philo(t_info *info);
+void	philo_init_input(t_info *info);
 int		philo_create_thread(t_info *info);
 int		philo_collect_all_thread(t_info *info);
 
 
 //print.c
-void	print(char *message, t_info info);
+int	print(char *message, t_philo *philo);
 
 #endif

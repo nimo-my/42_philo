@@ -6,19 +6,23 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 15:33:20 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/10 10:37:25 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/10 14:17:27 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	init_philo(t_info *info)
+int	init_philo(t_info *info)
 {
-	philo_init_input(info) || create_philo_thread(info) || \
-	philo_create_thread(info) 
+	philo_init_input(info);
+	if (create_philo_thread(info) == RET_ERROR)
+		return (RET_ERROR);
+	if (philo_collect_all_thread(info) == RET_ERROR)
+		return (RET_ERROR);
+	return (OK);
 }
 
-int philo_init_input(t_info *info)
+void philo_init_input(t_info *info)
 {
 	int	i;
 
@@ -40,7 +44,6 @@ int philo_init_input(t_info *info)
 			info->philos[i].id, info->philos[i].right_fork, info->philos[i].left_fork);
 		i++;
 	}
-	return (OK);
 }
 
 int	philo_create_thread(t_info *info)
@@ -48,28 +51,13 @@ int	philo_create_thread(t_info *info)
 	int i;
 
 	i = 0;
-	init_philo(info);
+	
 	while (i < info->num_philo)
 	{
 		if (pthread_create(&info->t_id_arr[i], NULL, philos_eat, &info->philos[i]))
 			return (RET_ERROR);
 		i++;
 	}
-	return (OK);
-}
-
-int	philo_collect_all_thread(t_info *info)
-{
-	int	i;
-	
-	i = 0;
-	while (i < info->num_philo)
-	{
-		if (pthread_join(info->t_id_arr[i], NULL))
-			return (RET_ERROR);
-		i++;
-	}
-	printf("\n\033[0;33mend of join \n\033[0m"); //debug
 	return (OK);
 }
 
@@ -86,7 +74,20 @@ void	*philos_eat(void *arg)
 	return (NULL);
 }
 
-
+int	philo_collect_all_thread(t_info *info)
+{
+	int	i;
+	
+	i = 0;
+	while (i < info->num_philo)
+	{
+		if (pthread_join(info->t_id_arr[i], NULL))
+			return (RET_ERROR);
+		i++;
+	}
+	printf("\n\033[0;33mend of join \n\033[0m"); //debug
+	return (OK);
+}
 
 //printf("i : %d\n", i);
 //printf("%p [1]info->philo[%d] id : %d, 오른쪽포크 : %d, 왼쪽포크 : %d \n",&info->philos[i], i, info->philos[i].id, info->philos[i].right_fork, info->philos[i].left_fork);
