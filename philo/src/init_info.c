@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 11:46:26 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/08 10:10:36 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/10 17:20:36 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ t_info	*make_info_struct(int argc, char *argv[])
 {
 	t_info *info;
 
-	info = (t_info *)p_malloc(sizeof(t_info));
-	p_memset(info, 0, sizeof(t_info));
+	info = (t_info *)malloc(sizeof(t_info));
+	memset(info, 0, sizeof(t_info));
 	init_info_argv(argc, argv, info);
 	set_info_struct(info);
 	return (info);
@@ -26,13 +26,12 @@ t_info	*make_info_struct(int argc, char *argv[])
 void	set_info_struct(t_info *info)
 {
 	info->count = 0;
-	info->philos = (t_philo *)p_malloc(sizeof(t_philo) * info->num_philo);
-	info->permit_fork = (int *)p_malloc(sizeof(int) * info->num_philo);
-	info->t_id_arr = (pthread_t *)p_malloc(sizeof(pthread_t) \
-															* info->num_philo);
-	info->m_fork_arr = (pthread_mutex_t *)p_malloc\
+	info->philos = (t_philo *)malloc(sizeof(t_philo) * info->num_philo);
+	info->permit_fork = (int *)malloc(sizeof(int) * info->num_philo);
+	info->t_id_arr = (pthread_t *)malloc(sizeof(pthread_t) * info->num_philo);
+	info->m_fork_arr = (pthread_mutex_t *)malloc\
 								(sizeof(pthread_mutex_t)* info->num_philo);
-	
+	// todo: allocation fail
 }
 
 void	init_info_argv(int argc, char *argv[], t_info *info)
@@ -43,12 +42,9 @@ void	init_info_argv(int argc, char *argv[], t_info *info)
 		info->time_to_die = p_atoi(argv[2]);
 		info->time_to_eat = p_atoi(argv[3]);
 		info->time_to_sleep = p_atoi(argv[4]);
-		// printf("%s %s %s %s \n", argv[1], argv[2], argv[3], argv[4]); // debug
 	}
 	if (argc == 6)
 		info->num_must_eat = p_atoi(argv[5]);
-	info->time_to_think = info->time_to_die - \
-									(info->time_to_eat + info->time_to_sleep);
 }
 
 int	check_argv(int argc, t_info *info)

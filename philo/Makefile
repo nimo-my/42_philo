@@ -6,7 +6,7 @@
 #    By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/30 18:14:43 by jisookim          #+#    #+#              #
-#    Updated: 2022/08/10 10:04:01 by jisookim         ###   ########.fr        #
+#    Updated: 2022/08/10 17:19:09 by jisookim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,8 +33,6 @@ SRCS		:=	$(addprefix $(SRCS_DIR)/, $(SRCS))
 # p_func
 FSRCS_DIR	:=	./p_func
 FSRCS		:=	p_atoi.c \
-				p_malloc.c \
-				p_memset.c \
 				p_memcpy.c \
 				p_error.c \
 				p_strlen.c

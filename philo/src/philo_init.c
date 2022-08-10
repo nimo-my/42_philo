@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 15:33:20 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/10 14:17:27 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/10 19:15:01 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	init_philo(t_info *info)
 {
 	philo_init_input(info);
-	if (create_philo_thread(info) == RET_ERROR)
+	if (philo_create_thread(info) == RET_ERROR)
 		return (RET_ERROR);
 	if (philo_collect_all_thread(info) == RET_ERROR)
 		return (RET_ERROR);
@@ -29,19 +29,19 @@ void philo_init_input(t_info *info)
 	i = 0;
 	while (i < info->num_philo)
 	{
-		info->philos[i].time = (t_time *)p_malloc(sizeof(t_time));
-		info->philos[i].go_info = (t_info *)p_malloc(sizeof(t_info));
+		memset(&info->philos[i], 0, sizeof(t_philo));
+		info->philos[i].time = (t_time *)malloc(sizeof(t_time));
+		info->philos[i].go_info = (t_info *)malloc(sizeof(t_info));
 		info->philos[i].go_info = info;
-
+		
+		// info->philos[i].flag_think = 0;
+		// info->philos[i].flag_eat = 0;
+		// info->philos[i].flag_sleep = 0;
+		
 		info->philos[i].eat_count = 0;
 		info->philos[i].id = i;
 		info->philos[i].right_fork = i;
-		if (info->philos[i].id > 0)
-			info->philos[i].left_fork = i - 1;
-		else
-			info->philos[i].left_fork = info->num_philo - 1;
-		printf("info->philo[%d] id : %d, 오른쪽포크 : %d, 왼쪽포크 : %d \n",i, \ 
-			info->philos[i].id, info->philos[i].right_fork, info->philos[i].left_fork);
+		info->philos[i].left_fork = (i + 1) % info->num_philo;
 		i++;
 	}
 }
@@ -51,7 +51,6 @@ int	philo_create_thread(t_info *info)
 	int i;
 
 	i = 0;
-	
 	while (i < info->num_philo)
 	{
 		if (pthread_create(&info->t_id_arr[i], NULL, philos_eat, &info->philos[i]))
@@ -70,7 +69,6 @@ void	*philos_eat(void *arg)
 		return ("ERROR!\n"); //return (p_error("ERROR : during philo program running.\n"));
 
 	printf("\033[0;34mphilo [%d] finished!\n\n\033[0m", this_philo->id);
-
 	return (NULL);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 22:42:52 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/10 15:00:13 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/10 16:09:00 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ long	set_time(struct timeval time)
 	return (time_mill_sec);
 }
 // 이런식으로 사용: 
-// philo->time.life_time[0] = settime(philo->time.life[0]) //밀리세컨드로 시간 표시
+// philo->time->life_time[0] = settime(philo->time->life[0]) //밀리세컨드로 시간 표시
 // (do sth)
-// philo->time.life_time[1] = settime(philo->time.life[1])
+// philo->time->life_time[1] = settime(philo->time->life[1])
 // 
 
 long	time_gap(struct timeval start_time, struct timeval end_time)

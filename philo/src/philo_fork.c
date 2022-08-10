@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 16:00:25 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/10 10:19:58 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/10 16:50:37 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	pick_fork(t_philo *this_philo, int fork_position)
 	{
 		if (!pthread_mutex_lock(&(this_philo->go_info->m_print)))
 		{
-			printf("[%d] has taken a fork \n", this_philo->id);
+			printf("[%d] has taken a fork. \n", this_philo->id);
 			if (pthread_mutex_unlock(&(this_philo->go_info->m_print)))
 				return (RET_ERROR);
 		}
