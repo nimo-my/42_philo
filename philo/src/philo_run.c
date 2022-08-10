@@ -6,31 +6,36 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 20:34:46 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/10 19:18:51 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/10 19:35:43 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+int	philo_eat(t_philo *philo, int *flag)
+{
+	if (philo->id % 2)
+		*flag = take_fork_and_eat(philo, philo->right_fork, philo->left_fork);
+	else
+		*flag = take_fork_and_eat(philo, philo->left_fork, philo->right_fork);
+	if (*flag  && (!put_down_fork(philo, philo->right_fork, philo->left_fork)))
+		return (RET_ERROR);
+	return (OK);
+}
+
 int	philo_run(t_philo *philo)
 {
-	int flg;
+	int flag;
 
-	flg = 0;
+	flag = 0;
 	philo->time->start_time = set_time(philo->time->start);
 	while (1)
 	{
-		if (philo->id % 2)
-			flg = take_fork_and_eat(philo, philo->right_fork, philo->left_fork);
-		else
-			flg = take_fork_and_eat(philo, philo->left_fork, philo->right_fork);
-		if (flg && (philo->id % 2) && (!put_down_fork(philo, philo->right_fork, philo->left_fork)))
-			break ;
-		else if (flg && (!put_down_fork(philo, philo->left_fork, philo->right_fork)))
+		if (philo_eat(philo, &flag) == RET_ERROR)
 			break ;
 		if (philo->go_info->finish_flg == philo->go_info->num_philo)
 		{
-			printf("[%d] philo eat all.\n", philo->id);
+			printf("[%d] philo eat all.\n", philo->id); // todo Something to tell mornitor
 			return (OK);
 		}
 		if (!philo_sleep(philo))
