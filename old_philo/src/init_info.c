@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 11:46:26 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/14 03:28:29 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/14 02:19:50 by jisookim         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,14 @@ t_info	*make_info_struct(int argc, char *argv[])
 	memset(info, 0, sizeof(t_info));
 	init_info_argv(argc, argv, info);
 	set_info_struct(info);
-	philo_init_input(info);
 	return (info);
 }
 
 void	set_info_struct(t_info *info)
 {
-	// info->count = 0;
+	info->count = 0;
 	info->philos = (t_philo *)malloc(sizeof(t_philo) * info->num_philo);
-	// info->permit_fork = (int *)malloc(sizeof(int) * info->num_philo);
+	info->permit_fork = (int *)malloc(sizeof(int) * info->num_philo);
 	info->t_philo = (pthread_t *)malloc(sizeof(pthread_t) * info->num_philo);
 	info->m_fork = (pthread_mutex_t *)malloc\
 								(sizeof(pthread_mutex_t)* info->num_philo);
@@ -46,7 +45,6 @@ void	init_info_argv(int argc, char *argv[], t_info *info)
 	}
 	if (argc == 6)
 		info->num_must_eat = p_atoi(argv[5]);
-	info->flag_eat_all = 1;
 }
 
 int	check_argv(int argc, t_info *info)
@@ -65,7 +63,7 @@ int	check_argv(int argc, t_info *info)
 		flag = p_error("ERROR : thread initialize error");
 	while (i < info->num_philo)
 	{
-		// info->permit_fork[i] = 1;
+		info->permit_fork[i] = 1;
 		if (pthread_mutex_init(&info->m_fork[i], NULL)) //init fork
 			flag = p_error("ERROR : mutex initialize error");
 		i++;

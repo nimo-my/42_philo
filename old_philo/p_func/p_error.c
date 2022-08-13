@@ -1,43 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_run.c                                        :+:      :+:    :+:   */
+/*   p_error.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/06 20:34:46 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/14 04:29:23 by jisookim         ###   ########seoul.kr  */
+/*   Created: 2022/08/06 20:15:23 by jisookim          #+#    #+#             */
+/*   Updated: 2022/08/08 10:41:23 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	*philo_run(void *arg)
+int	p_error(char *msg)
 {
-	t_philo	*p;
-
-	p = (t_philo *)arg;
-	if ((p->id) % 2 != 0)
-		usleep(200);
-	while (1)
-	{
-		grab_fork(p);
-		philo_eat();
-		put_down_fork(p);
-		philo_sleep();
-		// philo_think();
-		// exception();
-	}
-	return (NULL);
+	write(2, msg, p_strlen(msg));
+	return(RET_ERROR);
 }
 
-		grab_fork(p);
-
-
-		philo_eat();
-
-
-		put_down_fork(p);
-
-
-		philo_sleep();

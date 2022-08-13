@@ -1,0 +1,12 @@
+#object
+*.o
+
+#executable
+a.out
+philo
+philo_bonus
+
+#debug
+a.out.dSYM
+
+#etc

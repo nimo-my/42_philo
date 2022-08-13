@@ -1,43 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_run.c                                        :+:      :+:    :+:   */
+/*   p_strlen.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/06 20:34:46 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/14 04:29:23 by jisookim         ###   ########seoul.kr  */
+/*   Created: 2022/08/06 20:23:52 by jisookim          #+#    #+#             */
+/*   Updated: 2022/08/06 20:25:35 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	*philo_run(void *arg)
+size_t	p_strlen(const char *str)
 {
-	t_philo	*p;
+	size_t	len;
 
-	p = (t_philo *)arg;
-	if ((p->id) % 2 != 0)
-		usleep(200);
-	while (1)
-	{
-		grab_fork(p);
-		philo_eat();
-		put_down_fork(p);
-		philo_sleep();
-		// philo_think();
-		// exception();
-	}
-	return (NULL);
+	len = 0;
+	while (str[len] != '\0')
+		len++;
+	return (len);
 }
-
-		grab_fork(p);
-
-
-		philo_eat();
-
-
-		put_down_fork(p);
-
-
-		philo_sleep();

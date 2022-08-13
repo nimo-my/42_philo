@@ -6,24 +6,11 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 20:10:57 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/14 04:10:00 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/10 16:57:06 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
-
-int	philo(t_info *info)
-{
-	philo_create_thread(info); // 스레드 생성
-	gettimeofday(&(info->start_time), 0); // 시작시간 측정
-
-	monitor(info); // 모니터 (계속 돌아갈 수 있도록)
-
-	if (philo_collect_all_thread(info) == RET_ERROR)
-		return (RET_ERROR);
-
-	return (OK);
-}
 
 int main(int argc, char *argv[])
 {
@@ -33,13 +20,45 @@ int main(int argc, char *argv[])
 	info = make_info_struct(argc, argv);
 	if (!info || check_argv(argc, info) == RET_ERROR)
 		return (RET_ERROR);
-
-]	// [run philo]
-	if (philo(info) != OK)
+	// else // for debug
+	// {
+	// 	printf("[main] num of phil: %d\n", info->num_philo);
+	// 	printf("[main] time to die: %d\n", info->time_to_die);
+	// 	printf("[main] time to eat: %d\n", info->time_to_eat);
+	// 	printf("[main] time to slp: %d\n", info->time_to_sleep);
+	// 	printf("[main] num mus eat: %d\n", info->num_must_eat);
+	// }
+	
+	// [do] : 필로소퍼 생성(스레드 생성)
+	if (!init_philo(info))
+	{
+		printf("error!\n");
 		return (RET_ERROR);
+	}
+	printf("finished!\n");
+	return (0);
+	
 
-	//[clean_up] , free, thread mutex unlock->destroy
-	clean(info);
+	// // - 필로소퍼 생성 완료하면 시간재고 시뮬레이션 시작
+	// // 
+
+	// // thread join (기다리기)
+	// i = 0;
+	// while (i < info->num_philo)
+	// {
+	// 	pthread_join(&info->tid_arr[i], NULL);
+	// 	i++;
+	// }
+
+	// // malloc free, delete philo
+
+	// // pthread_mutex_destroy
+	// i  = 0;
+	// while (i < info->num_philo)
+	// {
+	// 	pthread_mutex_destroy(&mutex_arr[i]);
+	// 	i++;
+	// }
 
 	return (0);
 }

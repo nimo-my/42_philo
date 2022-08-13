@@ -1,43 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_run.c                                        :+:      :+:    :+:   */
+/*   p_memcpy.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/06 20:34:46 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/14 04:29:23 by jisookim         ###   ########seoul.kr  */
+/*   Created: 2022/08/05 11:30:53 by jisookim          #+#    #+#             */
+/*   Updated: 2022/08/05 11:31:54 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	*philo_run(void *arg)
+void	*p_memcpy(void *dest, const void *src, size_t n)
 {
-	t_philo	*p;
+	unsigned char	*copy_dest;
+	unsigned char	*copy_src;
 
-	p = (t_philo *)arg;
-	if ((p->id) % 2 != 0)
-		usleep(200);
-	while (1)
-	{
-		grab_fork(p);
-		philo_eat();
-		put_down_fork(p);
-		philo_sleep();
-		// philo_think();
-		// exception();
-	}
-	return (NULL);
+	copy_dest = (unsigned char *) dest;
+	copy_src = (unsigned char *) src;
+	if (!dest && !src)
+		return (NULL);
+	if (!n)
+		return (dest);
+	while (n--)
+		*(copy_dest++) = *(copy_src++);
+	return (dest);
 }
-
-		grab_fork(p);
-
-
-		philo_eat();
-
-
-		put_down_fork(p);
-
-
-		philo_sleep();

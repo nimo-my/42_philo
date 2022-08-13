@@ -1,43 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_run.c                                        :+:      :+:    :+:   */
+/*   print.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/06 20:34:46 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/14 04:29:23 by jisookim         ###   ########seoul.kr  */
+/*   Created: 2022/08/04 15:58:25 by jisookim          #+#    #+#             */
+/*   Updated: 2022/08/12 15:50:57 by jisookim         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	*philo_run(void *arg)
+int	print(char *message, t_philo *philo)
 {
-	t_philo	*p;
-
-	p = (t_philo *)arg;
-	if ((p->id) % 2 != 0)
-		usleep(200);
-	while (1)
-	{
-		grab_fork(p);
-		philo_eat();
-		put_down_fork(p);
-		philo_sleep();
-		// philo_think();
-		// exception();
-	}
-	return (NULL);
+	if (pthread_mutex_lock(&philo->info->m_print)) // mutex
+		return (RET_ERROR);
+	printf("%s\n", message); // print
+	if (pthread_mutex_unlock(&philo->info->m_print)) // unlock mutex
+		return (RET_ERROR);
+	return (OK);
 }
 
-		grab_fork(p);
 
-
-		philo_eat();
-
-
-		put_down_fork(p);
-
-
-		philo_sleep();
