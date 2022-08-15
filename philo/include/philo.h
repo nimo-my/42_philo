@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 18:18:43 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/14 04:20:39 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/15 01:42:18 by jisookim         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <sys/time.h> // gettimeofday
 # include <unistd.h>
 # include <stdio.h> // printf
-# include <stdbool.h>
+// # include <stdbool.h>
 #include <string.h> // memset
 
 /* ************************************************************************** */
@@ -34,23 +34,34 @@
 # define PHIL_DIE	0
 # define RET_ERROR	-1
 
-# define BEF_SEC_0	0
-# define BEF_SEC_1	1
-# define BEF_SEC_2	2
-# define BEF_SEC_3	3
+// # define BEF_SEC_0	0
+// # define BEF_SEC_1	1
+// # define BEF_SEC_2	2
+// # define BEF_SEC_3	3
 
 /* ************************************************************************** */
 // 	STRUCTURE
 /* ************************************************************************** */
 
-enum	THD_ERR_MSG
+// enum	THD_ERR_MSG
+// {
+// 	CREATE = 2,
+// 	JOIN,
+// 	MUTEX_INIT,
+// 	MUTEX_DESTROY,
+// 	MUTEX_LOCK,
+// 	MUTEX_UNLOCK
+// };
+
+enum STATE
 {
-	CREATE = 2,
-	JOIN,
-	MUTEX_INIT,
-	MUTEX_DESTROY,
-	MUTEX_LOCK,
-	MUTEX_UNLOCK
+	FORK,
+	EAT,
+	SLEEP,
+	THINK,
+	DEAD,
+	EAT_ALL,
+	EAT_MORE
 };
 
 typedef struct s_philo
@@ -61,11 +72,11 @@ typedef struct s_philo
 	int		right_fork;
 	int		left_fork;
 
-	struct timeval	current_eat;
+	struct timeval		current_eat; // todo: how to handle with first current_eat?
+	pthread_mutex_t		m_current_eat;
 
 	int					eat_count;
-	pthread_mutex_t		*m_eat_count;
-
+	pthread_mutex_t		m_eat_count;
 
 }				t_philo;
 
@@ -77,19 +88,27 @@ typedef struct s_info
 	int	time_to_sleep;
 	int	num_must_eat; // if argv == 6 only
 
-	int	flag_die;
 	int	flag_eat_all;
+	pthread_mutex_t		m_flag_eat_all;
 
-	struct timeval	start_time;
 
 	t_philo				*philos;
 	pthread_t			*t_philo; // init in set_info_struct
 
-	pthread_mutex_t		*m_fork; // init in set_info_struct
+	int	flag_die;
 	pthread_mutex_t		m_flag_die;
+
+	int					flag_starting;
+	struct timeval		start_time;
+	pthread_mutex_t		m_start_time;
+
+	struct timeval		current_time;
+	pthread_mutex_t		m_current_time;
+
+	int					*fork;
+	pthread_mutex_t		*m_fork; // init in set_info_struct
+
 	pthread_mutex_t		m_print;
-
-
 
 }						t_info;
 
@@ -108,32 +127,42 @@ size_t	p_strlen(const char *str);
 
 // init_info.c
 t_info	*make_info_struct(int argc, char *argv[]);
-void	set_info_struct(t_info *info);
-void	init_info_argv(int argc, char *argv[], t_info *info);
+int		init_info_argv(int argc, char *argv[], t_info *info);
+int		setting_struct(t_info *info);
 int		check_argv(int argc, t_info *info);
 
+// main.c
+
+
+// monitor.c
+int		check_philo_starve(t_info *info, int i);
+int		check_philo_eat_all(t_info *info, int i);
+int		check_curr_time(t_info *info);
+void	monitor(t_info *info);
+
 // philo_fork.c
-int	pick_fork(t_philo *this_philo, int fork_position);
+void	grab_fork(t_info *info, t_philo *p);
+void	put_down_fork(t_info *info, t_philo *p);
+
+// philo_thread.c
+int		philo_init_input(t_info *info);
+int		philo_create_thread(t_info *info);
+int		philo_collect_all_thread(t_info *info);
 
 // philo_run.c
 void	*philo_run(void *arg);
-
-
+int		check_philo_dead(t_info *info, t_philo *p);
+int		philo_eat(t_info *info, t_philo *p);
+void	philo_sleep(t_info *info, t_philo *p);
+void	philo_think(t_info *info, t_philo *p);
 
 // time.c
-time_t	custom_timer(int input_time);
+void	custom_usleep_timer(int input_time);
+int		time_gap(struct timeval start_time, struct timeval end_time);
 
-time_t	starved_time(struct timeval start_time, struct timeval end_time);
+//voice.c
+int		get_flag_philo_dead(t_info *info);
+void	set_flag_philo_dead(t_info *info);
+void	voice(enum STATE state, t_info *info, t_philo *p);
 
-
-//philo_init.c
-int		init_philo(t_info *info);
-void	philo_init_input(t_info *info);
-int		philo_create_thread(t_info *info);
-void	*philos_eat(void *arg);
-int		philo_collect_all_thread(t_info *info);
-
-
-//print.c
-int	print(t_philo *philo, time_t time, int id, char *message);
 #endif

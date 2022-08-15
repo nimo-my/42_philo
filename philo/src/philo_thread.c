@@ -1,34 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_init.c                                       :+:      :+:    :+:   */
+/*   philo_thread.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 15:33:20 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/14 04:06:53 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/14 17:52:17 by jisookim         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void philo_init_input(t_info *info)
+int	philo_init_input(t_info *info)
 {
 	int	i;
+	int	flag;
 
 	i = 0;
+	flag = 0;
 	while (i < info->num_philo)
 	{
 		memset(&info->philos[i], 0, sizeof(t_philo));
 		info->philos[i].info = (t_info *)malloc(sizeof(t_info));
+		if (!info->philos[i].info)
+		{
+			flag = 1;
+			break ;
+		}
 		info->philos[i].info = info;
-
 		info->philos[i].eat_count = 0;
 		info->philos[i].id = i;
 		info->philos[i].right_fork = i;
 		info->philos[i].left_fork = (i + 1) % info->num_philo;
 		i++;
 	}
+	if (flag)
+		return (ERROR);
+	return (OK);
 }
 
 int	philo_create_thread(t_info *info)
@@ -36,12 +45,17 @@ int	philo_create_thread(t_info *info)
 	int i;
 
 	i = 0;
+	pthread_mutex_lock(&info->m_start_time);
+	gettimeofday(&info->start_time, 0);
+	pthread_mutex_unlock(&info->m_start_time);
 	while (i < info->num_philo)
 	{
-		if (!pthread_create(&info->t_philo[i], 0, philo_run, &info->philos[i]))
+		if (pthread_create(&info->t_philo[i], 0, philo_run, &info->philos[i]))
 			return (RET_ERROR);
 		i++;
 	}
+	printf("\n\ncreate all thread!\n\n");
+	return (OK);
 }
 
 
@@ -57,7 +71,7 @@ int	philo_collect_all_thread(t_info *info)
 		else
 			return (RET_ERROR);
 	}
-	printf("\n\033[0;33mend of join \n\033[0m"); //debug
+	printf("\n\nend of join!\n\n"); //debug
 	return (OK);
 }
 

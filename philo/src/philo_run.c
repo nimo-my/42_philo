@@ -6,11 +6,13 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 20:34:46 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/14 04:29:23 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/15 01:43:23 by jisookim         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
+
+// todo : 시간 측정!
 
 void	*philo_run(void *arg)
 {
@@ -18,26 +20,65 @@ void	*philo_run(void *arg)
 
 	p = (t_philo *)arg;
 	if ((p->id) % 2 != 0)
-		usleep(200);
+		usleep(100);
+	pthread_mutex_lock(&p->m_current_eat);
+	gettimeofday(&p->current_eat, 0);
+	pthread_mutex_unlock(&p->m_current_eat);
+
 	while (1)
 	{
-		grab_fork(p);
-		philo_eat();
-		put_down_fork(p);
-		philo_sleep();
-		// philo_think();
-		// exception();
+		if (!check_philo_dead(p->info, p))
+			break ;
+		grab_fork(p->info, p);
+		if (philo_eat(p->info, p))
+			break ;
+		put_down_fork(p->info, p);
+		philo_sleep(p->info, p);
+		philo_think(p->info, p);
 	}
 	return (NULL);
 }
 
-		grab_fork(p);
+int	check_philo_dead(t_info *info, t_philo *p)
+{
+	check_curr_time(info);
+	if (time_gap(info->start_time, p->current_eat) > info->time_to_die)
+	{
+		voice(DEAD, info, p);
+		info->flag_die = 1;
+		return (PHIL_DIE);
+	}
+	else
+	{
+		pthread_mutex_unlock(&info->m_start_time);
+		return (1);
+	}
+}
 
+int	philo_eat(t_info *info, t_philo *p)
+{
+	check_curr_time(info);
+	voice(EAT, info, p);
+	custom_usleep_timer(info->time_to_eat);
+	p->eat_count++;
 
-		philo_eat();
+	if (p->eat_count == info->num_must_eat) // check philo eat all
+		voice(EAT_ALL, info, p);
+	else if (p->eat_count > info->num_must_eat) // check philo eat all
+		voice(EAT_MORE, info, p);
+	return (0);
+}
 
+void	philo_sleep(t_info *info, t_philo *p)
+{
+	check_curr_time(info);
+	voice(SLEEP, info, p);
+	custom_usleep_timer(info->time_to_sleep);
+}
 
-		put_down_fork(p);
-
-
-		philo_sleep();
+void	philo_think(t_info *info, t_philo *p)
+{
+	check_curr_time(info);
+	voice(THINK, info, p);
+	usleep(100);
+}

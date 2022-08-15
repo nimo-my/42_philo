@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 01:48:10 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/14 04:04:03 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/15 00:59:15 by jisookim         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,27 @@
 
 int	check_philo_starve(t_info *info, int i)
 {
-	struct timeval now_time;
+	// int res;
+	(void)info;
+	(void)i;
+	// pthread_mutex_lock(&(info->philos[i].m_current_eat));
+	// gettimeofday(&info->philos[i].current_eat, 0);
+	// pthread_mutex_unlock(&(info->philos[i].m_current_eat));
 
-	gettimeofday(&now_time, 0);
-	pthread_mutex_lock(&(info->philos[i].m_eat_count));
-	if (starved_time(info->philos[i].current_eat, now_time) > info->time_to_die)
-		return (PHIL_DIE);
-	pthread_mutex_unlock(&(info->philos[i].m_eat_count));
+	// pthread_mutex_lock(&(info->m_start_time));
+	// gettimeofday(&info->start_time, 0);
+	// pthread_mutex_unlock(&(info->m_start_time));
+
+	// printf("i : %d\n", i);
+	//printf("33 %d %d [%d]\n", start, curr, start - curr);
+	//printf("res: %d\n", res);
+
+	// res = time_gap(info->start_time, info->philos[i].current_eat);
+	// if (res > info->time_to_die)
+	// {
+	// 	get_flag_philo_dead(info);
+	// 	return (PHIL_DIE);
+	// }
 	return (OK);
 }
 
@@ -44,6 +58,16 @@ int	check_philo_eat_all(t_info *info, int i)
 	return (OK);
 }
 
+int	check_curr_time(t_info *info)
+{
+	int ret;
+
+	pthread_mutex_lock(&info->m_current_time);
+	ret = gettimeofday(&info->current_time, 0);
+	pthread_mutex_unlock(&info->m_current_time);
+	return (ret);
+}
+
 void	monitor(t_info *info)
 {
 	int	i;
@@ -51,11 +75,11 @@ void	monitor(t_info *info)
 
 	i = 0;
 	dead = 0;
+	printf("this is monitor!\n");
+	
 	while (1)
 	{
-		pthread_mutex_lock(&info->m_flag_die);
-		dead = info->flag_die;
-		pthread_mutex_unlock(&info->m_flag_die);
+		dead = get_flag_philo_dead(info);
 		if (dead)
 			break ;
 		while (i < info->num_philo)
