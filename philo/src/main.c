@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 20:10:57 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/15 20:25:05 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/15 23:02:26 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	philo(t_info *info)
 {
+	int ret_monitor;
 	// 이 처리를 어떻게 해주지? 시간 스레드 만든 다음에 측정하는게 맞는ㄱ ㅓㅅ 같은데ㅔ
 	// 스레드가 만들어졌는데 시간이 초기화가 안 되어있을 수 있잖아! 
 	// 일단 처음에도 start time 만들어주긴 했는데 실험해봐야 할 것 같아. 
@@ -28,7 +29,8 @@ int	philo(t_info *info)
 	gettimeofday(&info->start_time, 0);
 	pthread_mutex_unlock(&info->m_start_time);
 
-	if (monitor(info) == PHIL_DIE)
+	ret_monitor = monitor(info);
+	if (ret_monitor == PHIL_DIE)
 		return (PHIL_DIE); // 모니터 (계속 돌아갈 수 있도록)
 
 	if (philo_collect_all_thread(info) == RET_ERROR)

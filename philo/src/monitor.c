@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 01:48:10 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/15 20:26:37 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/15 23:11:03 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,48 +37,79 @@ int	check_philo_eat_all(t_info *info, int i)
 	while (i < info->num_must_eat)
 	{
 		pthread_mutex_lock(&(info->philos[i].m_eat_count));
-		if (info->philos[i].eat_count > info->num_must_eat)
+		if (info->philos[i].eat_count == info->num_must_eat)
 		{
 			pthread_mutex_unlock(&(info->philos[i].m_eat_count));
 			voice(EAT_ALL, info, &info->philos[i]);
-			pthread_mutex_lock(&(info->m_flag_eat_all));
-			info->flag_eat_all = 1;
-			pthread_mutex_lock(&(info->m_flag_eat_all));
-			return (0);
+			pthread_mutex_lock(&info->philos[i].m_flag_eat_all);
+			info->philos[i].flag_eat_all = 1;
+			pthread_mutex_unlock(&info->philos[i].m_flag_eat_all);
+			return (OK);
 		}
 		pthread_mutex_unlock(&(info->philos[i].m_eat_count));
-		pthread_mutex_lock(&(info->m_flag_eat_all));
-		info->flag_eat_all = 0;
-		pthread_mutex_unlock(&(info->m_flag_eat_all));
-		i++;
 	}
 	return (OK);
+}
+
+void	init_fork(t_info *info, int i)
+{
+	pthread_mutex_lock(&info->philos[i].m_flag_eat_all);
+	info->philos[i].flag_eat_all = -2;
+	pthread_mutex_unlock(&info->philos[i].m_flag_eat_all);
+	pthread_mutex_lock(&info->m_fork[i]);
+	if (info->fork[info->philos[i].right_fork] == 0)
+		info->fork[info->philos[i].right_fork] = 1;
+	if (info->fork[info->philos[i].left_fork] == 0)
+		info->fork[info->philos[i].left_fork] = 1;
+	pthread_mutex_unlock(&info->philos[i].m_flag_eat_all);
 }
 
 int	monitor(t_info *info)
 {
 	int	i;
-	int	dead;
 
 	i = 0;
 	while (1)
 	{
 		while (i < info->num_philo)
 		{
-			if (!check_philo_dead(info, &info->philos[i]))
+			if (check_philo_dead(info, &info->philos[i]) == PHIL_DIE)
 				break ;
-			i++;
-		}
-		i = 0;
-		while (i < info->num_philo && info->num_must_eat)
-		{
-			if (check_philo_eat_all(info, i))
-				break ;
+			// if (check_philo_eat_all(info, i))
+			// 	break ;
 			i++;
 		}
 		i = 0;
 		if (info->flag_die == 1)
 			return (PHIL_DIE);
+		pthread_mutex_lock(&(info->m_everyone_eat));
+		if (info->count_everyone_eat == info->num_philo)
+			return (OK);
+		pthread_mutex_unlock(&(info->m_everyone_eat));
 	}
 	return (PHIL_DIE);
 }
+
+
+// pthread_mutex_lock(&(info->philos[i].m_eat_count));
+// 		if (info->philos[i].eat_count == info->num_must_eat)
+// 		{
+// 			pthread_mutex_unlock(&(info->philos[i].m_eat_count));
+// 			voice(EAT_ALL, info, &info->philos[i]);
+// 			pthread_mutex_lock(&info->philos[i].m_flag_eat_all);
+// 			info->philos[i].flag_eat_all = 1;
+// 			pthread_mutex_unlock(&info->philos[i].m_flag_eat_all);
+// 			return (OK);
+// 		}
+// 		else if (info->philos[i].eat_count > info->num_must_eat)
+// 		{
+// 			pthread_mutex_lock(&info->philos[i].m_flag_eat_all);
+// 			init_fork(info, i);
+// 			pthread_mutex_unlock(&info->philos[i].m_flag_eat_all);
+// 			return (0);
+// 		}
+// 		pthread_mutex_unlock(&(info->philos[i].m_eat_count));
+// 		pthread_mutex_lock(&info->philos[i].m_flag_eat_all);
+// 		info->philos[i].flag_eat_all = 0;
+// 		pthread_mutex_unlock(&info->philos[i].m_flag_eat_all);
+// 		i++;

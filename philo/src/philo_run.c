@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 20:34:46 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/15 20:07:46 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/15 23:09:08 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,10 @@ void	*philo_run(void *arg)
 
 	while (1)
 	{
-		// if (!check_philo_dead(p->info, p))
-		// 	break ;
+		if (p->eat_count == -1) // check philo eat all
+		{
+			break ;
+		}
 		grab_fork(p->info, p);
 		if (philo_eat(p->info, p))
 			break ;
@@ -45,16 +47,17 @@ int	philo_eat(t_info *info, t_philo *p)
 	pthread_mutex_lock(&p->m_current_eat);
 	gettimeofday(&p->current_eat, 0);
 	pthread_mutex_unlock(&p->m_current_eat);
+	
 	voice(EAT, info, p);
 	custom_usleep_timer(info->time_to_eat);
+	
 	p->eat_count++;
 
 	if (p->eat_count == info->num_must_eat) // check philo eat all
 	{
 		voice(EAT_ALL, info, p);
-		return (1);
 	}
-	// else if (p->eat_count > info->num_must_eat) // check philo eat all
+	
 	return (0);
 }
 

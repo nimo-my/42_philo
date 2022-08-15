@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 15:58:25 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/15 20:26:54 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/15 22:47:36 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,12 @@ void	voice(enum STATE state, t_info *info, t_philo *p)
 	if (get_flag_philo_dead(info))
 		;
 	else if (state == EAT_ALL)
-		printf("[%d] philo %d 다먹음! \n", gap, p->id);
+	{
+		printf("[%d] philo %d eat all!\n", gap, p->id);
+		pthread_mutex_lock(&info->m_everyone_eat);
+		info->count_everyone_eat++;
+		pthread_mutex_unlock(&info->m_everyone_eat);
+	}
 	else if (state == EAT_MORE)
 		;
 	else if (state == FORK)

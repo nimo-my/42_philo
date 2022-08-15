@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/15 18:49:51 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/15 18:50:45 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/15 21:59:54 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 
 void destroy_info_mutex1(t_info *info)
 {
-	if (pthread_mutex_destroy(&info->m_flag_eat_all))
+	if (pthread_mutex_destroy(&info->m_everyone_eat))
 	{
-		pthread_mutex_unlock(&info->m_flag_eat_all);
-		pthread_mutex_destroy(&info->m_flag_eat_all);
+		pthread_mutex_unlock(&info->m_everyone_eat);
+		pthread_mutex_destroy(&info->m_everyone_eat);
 	}
 	if (pthread_mutex_destroy(&info->m_flag_die))
 	{
@@ -75,15 +75,21 @@ void	end_philo(t_info *info)
 			pthread_mutex_unlock(&info->philos[i].m_eat_count);
 			pthread_mutex_destroy(&info->philos[i].m_eat_count);
 		}
-		free(info->philos[i].info);
+		if (pthread_mutex_destroy(&info->philos[i].m_flag_eat_all))
+		{
+			pthread_mutex_unlock(&info->philos[i].m_flag_eat_all);
+			pthread_mutex_destroy(&info->philos[i].m_flag_eat_all);
+		}
+		//free(info->philos[i].info);
 		i++;
 	}
 	destroy_info_mutex1(info);
 	destroy_info_mutex2(info);
 
-	free(info->philos);
-	free(info->fork);
-	free(info->m_fork);
+	// free(info->philos);
+	// free(info->t_philo);
+	// free(info->fork);
+	// free(info->m_fork);
 
-	free(info);
+	// free(info);
 }

@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 11:46:26 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/14 18:04:12 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/15 21:55:44 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ int	init_info_argv(int argc, char *argv[], t_info *info)
 		info->num_must_eat = -1;
 	// init values
 	info->flag_starting = 1;
-	info->flag_eat_all = 0;
 	
 	if (!info->num_philo || !info->time_to_die || !info->time_to_eat || \
 		!info->time_to_sleep || !info->num_must_eat)
@@ -53,9 +52,12 @@ int	setting_struct(t_info *info)
 	info->t_philo = malloc(sizeof(pthread_t) * info->num_philo);
 	info->fork = malloc(sizeof(int) * info->num_philo);
 	info->m_fork = malloc(sizeof(pthread_mutex_t) * info->num_philo);
-
 	if (!info->philos || !info->t_philo || !info->fork || !info->m_fork)
 		return (RET_ERROR); // -1
+	pthread_mutex_init(&(info->m_current_time), 0);
+	pthread_mutex_init(&(info->m_start_time), 0);
+	pthread_mutex_init(&(info->m_flag_die), 0);
+	pthread_mutex_init(&(info->m_everyone_eat), 0);
 	return (OK);
 }
 

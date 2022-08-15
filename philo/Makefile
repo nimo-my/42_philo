@@ -6,12 +6,12 @@
 #    By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/30 18:14:43 by jisookim          #+#    #+#              #
-#    Updated: 2022/08/15 18:50:33 by jisookim         ###   ########.fr        #
+#    Updated: 2022/08/15 22:56:37 by jisookim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC			:=	cc
-CFLAGS		:=	-Wall -Wextra -Werror
+CFLAGS		:=	-Wall -Wextra -Werror -g
 RM			:=	rm -f
 AR			:=	ar
 ARFLAGS		:=	rcus

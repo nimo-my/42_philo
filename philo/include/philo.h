@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 18:18:43 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/15 20:23:41 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/15 22:47:19 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,9 @@ typedef struct s_philo
 	int					eat_count;
 	pthread_mutex_t		m_eat_count;
 
+	int	flag_eat_all;
+	pthread_mutex_t		m_flag_eat_all;
+
 }				t_philo;
 
 typedef struct s_info
@@ -88,8 +91,8 @@ typedef struct s_info
 	int	time_to_sleep;
 	int	num_must_eat; // if argv == 6 only
 
-	int	flag_eat_all;
-	pthread_mutex_t		m_flag_eat_all;
+	int					count_everyone_eat;
+	pthread_mutex_t		m_everyone_eat;
 
 
 	t_philo				*philos;
@@ -142,6 +145,7 @@ int		monitor(t_info *info);
 // philo_fork.c
 void	grab_fork(t_info *info, t_philo *p);
 void	put_down_fork(t_info *info, t_philo *p);
+
 
 // philo_thread.c
 int		philo_init_input(t_info *info);
