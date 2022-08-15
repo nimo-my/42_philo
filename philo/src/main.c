@@ -6,89 +6,21 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 20:10:57 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/15 02:10:14 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/15 20:25:05 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void destroy_info_mutex1(t_info *info)
-{
-	if (pthread_mutex_destroy(&info->m_flag_eat_all))
-	{
-		pthread_mutex_unlock(&info->m_flag_eat_all);
-		pthread_mutex_destroy(&info->m_flag_eat_all);
-	}
-	if (pthread_mutex_destroy(&info->m_flag_die))
-	{
-		pthread_mutex_unlock(&info->m_flag_die);
-		pthread_mutex_destroy(&info->m_flag_die);
-	}
-	if (pthread_mutex_destroy(&info->m_start_time))
-	{
-		pthread_mutex_unlock(&info->m_start_time);
-		pthread_mutex_destroy(&info->m_start_time);
-	}
-}
-
-void destroy_info_mutex2(t_info *info)
-{
-	int	i;
-	i = 0;
-
-	if (pthread_mutex_destroy(&info->m_current_time))
-	{
-		pthread_mutex_unlock(&info->m_current_time);
-		pthread_mutex_destroy(&info->m_current_time);
-	}
-	if (pthread_mutex_destroy(&info->m_print))
-	{
-		pthread_mutex_unlock(&info->m_print);
-		pthread_mutex_destroy(&info->m_print);
-	}
-	while (i < info->num_philo)
-	{
-		if (pthread_mutex_destroy(&(info->m_fork[i])))
-		{
-			pthread_mutex_unlock(&(info->m_fork[i]));
-			pthread_mutex_destroy(&(info->m_fork[i]));
-		}
-		i++;
-	}
-}
-
-void	end_philo(t_info *info)
-{
-	int i;
-
-	i = 0;
-	while (i < info->num_philo)
-	{
-		if (pthread_mutex_destroy(&info->philos[i].m_current_eat))
-		{
-			pthread_mutex_unlock(&info->philos[i].m_current_eat);
-			pthread_mutex_destroy(&info->philos[i].m_current_eat);
-		}
-		if (pthread_mutex_destroy(&info->philos[i].m_eat_count))
-		{
-			pthread_mutex_unlock(&info->philos[i].m_eat_count);
-			pthread_mutex_destroy(&info->philos[i].m_eat_count);
-		}
-		free(info->philos[i].info);
-		i++;
-	}
-	destroy_info_mutex1(info);
-	destroy_info_mutex2(info);
-
-	free(info->philos);
-	free(info->fork);
-	free(info->m_fork);
-
-	free(info);
-}
-
 int	philo(t_info *info)
 {
+	// 이 처리를 어떻게 해주지? 시간 스레드 만든 다음에 측정하는게 맞는ㄱ ㅓㅅ 같은데ㅔ
+	// 스레드가 만들어졌는데 시간이 초기화가 안 되어있을 수 있잖아! 
+	// 일단 처음에도 start time 만들어주긴 했는데 실험해봐야 할 것 같아. 
+	pthread_mutex_lock(&info->m_start_time);
+	gettimeofday(&info->start_time, 0);
+	pthread_mutex_unlock(&info->m_start_time);
+
 	if (philo_create_thread(info) == RET_ERROR) // 스레드 생성
 		return (RET_ERROR);
 
@@ -96,7 +28,8 @@ int	philo(t_info *info)
 	gettimeofday(&info->start_time, 0);
 	pthread_mutex_unlock(&info->m_start_time);
 
-	monitor(info); // 모니터 (계속 돌아갈 수 있도록)
+	if (monitor(info) == PHIL_DIE)
+		return (PHIL_DIE); // 모니터 (계속 돌아갈 수 있도록)
 
 	if (philo_collect_all_thread(info) == RET_ERROR)
 		return (RET_ERROR);

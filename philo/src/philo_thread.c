@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 15:33:20 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/14 17:52:17 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/15 18:53:00 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ int	philo_create_thread(t_info *info)
 	int i;
 
 	i = 0;
-	pthread_mutex_lock(&info->m_start_time);
-	gettimeofday(&info->start_time, 0);
-	pthread_mutex_unlock(&info->m_start_time);
+	// pthread_mutex_lock(&info->m_start_time);
+	// gettimeofday(&info->start_time, 0);
+	// pthread_mutex_unlock(&info->m_start_time);
 	while (i < info->num_philo)
 	{
 		if (pthread_create(&info->t_philo[i], 0, philo_run, &info->philos[i]))

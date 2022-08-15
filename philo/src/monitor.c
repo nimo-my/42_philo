@@ -6,40 +6,30 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 01:48:10 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/15 00:59:15 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/15 20:26:37 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-// 죽은 필로 확인하고
-// 하나라도 있으면 finish_flag = 1;
-// 이때, info->flag는 공유자원이기 때문에 뮤텍스 걸어놓아야함
 
-int	check_philo_starve(t_info *info, int i)
+int	check_philo_dead(t_info *info, t_philo *p)
 {
-	// int res;
-	(void)info;
-	(void)i;
-	// pthread_mutex_lock(&(info->philos[i].m_current_eat));
-	// gettimeofday(&info->philos[i].current_eat, 0);
-	// pthread_mutex_unlock(&(info->philos[i].m_current_eat));
-
-	// pthread_mutex_lock(&(info->m_start_time));
-	// gettimeofday(&info->start_time, 0);
-	// pthread_mutex_unlock(&(info->m_start_time));
-
-	// printf("i : %d\n", i);
-	//printf("33 %d %d [%d]\n", start, curr, start - curr);
-	//printf("res: %d\n", res);
-
-	// res = time_gap(info->start_time, info->philos[i].current_eat);
-	// if (res > info->time_to_die)
-	// {
-	// 	get_flag_philo_dead(info);
-	// 	return (PHIL_DIE);
-	// }
-	return (OK);
+	check_curr_time(info);
+	if (time_gap(p->current_eat, info->current_time) > info->time_to_die)
+	{
+		pthread_mutex_unlock(&info->m_start_time);
+		voice(DEAD, info, p);
+		pthread_mutex_lock(&info->m_flag_die);
+		info->flag_die = 1;
+		pthread_mutex_unlock(&info->m_flag_die);
+		return (PHIL_DIE);
+	}
+	else
+	{
+		pthread_mutex_unlock(&info->m_start_time);
+		return (OK);
+	}
 }
 
 int	check_philo_eat_all(t_info *info, int i)
@@ -47,44 +37,35 @@ int	check_philo_eat_all(t_info *info, int i)
 	while (i < info->num_must_eat)
 	{
 		pthread_mutex_lock(&(info->philos[i].m_eat_count));
-		if (info->philos[i].eat_count < info->num_must_eat)
+		if (info->philos[i].eat_count > info->num_must_eat)
 		{
-			info->flag_eat_all = 0;
+			pthread_mutex_unlock(&(info->philos[i].m_eat_count));
+			voice(EAT_ALL, info, &info->philos[i]);
+			pthread_mutex_lock(&(info->m_flag_eat_all));
+			info->flag_eat_all = 1;
+			pthread_mutex_lock(&(info->m_flag_eat_all));
 			return (0);
 		}
 		pthread_mutex_unlock(&(info->philos[i].m_eat_count));
+		pthread_mutex_lock(&(info->m_flag_eat_all));
+		info->flag_eat_all = 0;
+		pthread_mutex_unlock(&(info->m_flag_eat_all));
 		i++;
 	}
 	return (OK);
 }
 
-int	check_curr_time(t_info *info)
-{
-	int ret;
-
-	pthread_mutex_lock(&info->m_current_time);
-	ret = gettimeofday(&info->current_time, 0);
-	pthread_mutex_unlock(&info->m_current_time);
-	return (ret);
-}
-
-void	monitor(t_info *info)
+int	monitor(t_info *info)
 {
 	int	i;
 	int	dead;
 
 	i = 0;
-	dead = 0;
-	printf("this is monitor!\n");
-	
 	while (1)
 	{
-		dead = get_flag_philo_dead(info);
-		if (dead)
-			break ;
 		while (i < info->num_philo)
 		{
-			if (!check_philo_starve(info, i))
+			if (!check_philo_dead(info, &info->philos[i]))
 				break ;
 			i++;
 		}
@@ -96,5 +77,8 @@ void	monitor(t_info *info)
 			i++;
 		}
 		i = 0;
+		if (info->flag_die == 1)
+			return (PHIL_DIE);
 	}
+	return (PHIL_DIE);
 }

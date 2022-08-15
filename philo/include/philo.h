@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 18:18:43 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/15 01:42:18 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/15 20:23:41 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ typedef struct s_info
 
 	int					flag_starting;
 	struct timeval		start_time;
-	pthread_mutex_t		m_start_time;
+	pthread_mutex_t		m_start_time; // create thread 때 측정
 
 	struct timeval		current_time;
 	pthread_mutex_t		m_current_time;
@@ -137,8 +137,7 @@ int		check_argv(int argc, t_info *info);
 // monitor.c
 int		check_philo_starve(t_info *info, int i);
 int		check_philo_eat_all(t_info *info, int i);
-int		check_curr_time(t_info *info);
-void	monitor(t_info *info);
+int		monitor(t_info *info);
 
 // philo_fork.c
 void	grab_fork(t_info *info, t_philo *p);
@@ -157,6 +156,7 @@ void	philo_sleep(t_info *info, t_philo *p);
 void	philo_think(t_info *info, t_philo *p);
 
 // time.c
+void	check_curr_time(t_info *info);
 void	custom_usleep_timer(int input_time);
 int		time_gap(struct timeval start_time, struct timeval end_time);
 
@@ -164,5 +164,10 @@ int		time_gap(struct timeval start_time, struct timeval end_time);
 int		get_flag_philo_dead(t_info *info);
 void	set_flag_philo_dead(t_info *info);
 void	voice(enum STATE state, t_info *info, t_philo *p);
+
+//philo_end.c
+void 	destroy_info_mutex1(t_info *info);
+void 	destroy_info_mutex2(t_info *info);
+void	end_philo(t_info *info);
 
 #endif

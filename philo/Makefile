@@ -6,7 +6,7 @@
 #    By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/30 18:14:43 by jisookim          #+#    #+#              #
-#    Updated: 2022/08/14 15:22:34 by jisookim         ###   ########seoul.kr   #
+#    Updated: 2022/08/15 18:50:33 by jisookim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRCS		:=	main.c \
 				init_info.c \
 				philo_fork.c \
 				philo_thread.c \
+				philo_end.c \
 				philo_run.c \
 				time.c \
 				monitor.c \

@@ -6,11 +6,18 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 22:42:52 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/15 01:26:01 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/15 20:09:28 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
+
+void	check_curr_time(t_info *info)
+{
+	pthread_mutex_lock(&info->m_current_time);
+	gettimeofday(&info->current_time, 0);
+	pthread_mutex_unlock(&info->m_current_time);
+}
 
 void	custom_usleep_timer(int input_time)
 {
