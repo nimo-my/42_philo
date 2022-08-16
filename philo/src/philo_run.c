@@ -6,13 +6,11 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 20:34:46 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/15 23:09:08 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/16 21:52:20 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
-
-// todo : 시간 측정!
 
 void	*philo_run(void *arg)
 {
@@ -21,56 +19,58 @@ void	*philo_run(void *arg)
 	p = (t_philo *)arg;
 	if ((p->id) % 2 != 0)
 		usleep(100);
-	pthread_mutex_lock(&p->m_current_eat);
-	gettimeofday(&p->current_eat, 0);
-	pthread_mutex_unlock(&p->m_current_eat);
+	if (p->info->num_must_eat)
+		philo_day_running(p);
+	else
+		philo_day_running(p);
+	return (NULL);
+}
 
-	while (1)
+void	philo_day_running(t_philo *p)
+{
+	int	die;
+
+	while (p->eat_count != p->info->num_must_eat)
 	{
-		if (p->eat_count == -1) // check philo eat all
-		{
+		pthread_mutex_lock(&p->info->m_flag_die);
+		die = p->info->flag_die;
+		pthread_mutex_unlock(&p->info->m_flag_die);
+		if (die)
 			break ;
-		}
 		grab_fork(p->info, p);
-		if (philo_eat(p->info, p))
-			break ;
+		philo_eat(p->info, p);
 		put_down_fork(p->info, p);
 		philo_sleep(p->info, p);
 		philo_think(p->info, p);
 	}
-	return (NULL);
 }
 
-
-int	philo_eat(t_info *info, t_philo *p)
+void	philo_eat(t_info *info, t_philo *p)
 {
-	pthread_mutex_lock(&p->m_current_eat);
-	gettimeofday(&p->current_eat, 0);
-	pthread_mutex_unlock(&p->m_current_eat);
-	
-	voice(EAT, info, p);
-	custom_usleep_timer(info->time_to_eat);
-	
-	p->eat_count++;
+	struct timeval	time;
 
+	voice(EAT, info, p);
+	gettimeofday(&time, NULL);
+	// pthread_mutex_lock(&p->m_current_eat);
+	p->current_eat = time;
+	// pthread_mutex_unlock(&p->m_current_eat);
+	custom_usleep_timer(&time, info->time_to_eat);
+	p->eat_count++; // todo: data race
 	if (p->eat_count == info->num_must_eat) // check philo eat all
-	{
 		voice(EAT_ALL, info, p);
-	}
-	
-	return (0);
 }
 
 void	philo_sleep(t_info *info, t_philo *p)
 {
-	check_curr_time(info);
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
 	voice(SLEEP, info, p);
-	custom_usleep_timer(info->time_to_sleep);
+	custom_usleep_timer(&time, info->time_to_sleep);
 }
 
 void	philo_think(t_info *info, t_philo *p)
 {
-	check_curr_time(info);
 	voice(THINK, info, p);
 	usleep(100);
 }

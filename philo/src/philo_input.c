@@ -1,43 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_thread.c                                     :+:      :+:    :+:   */
+/*   philo_input.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/04 15:33:20 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/16 21:05:43 by jisookim         ###   ########.fr       */
+/*   Created: 2022/08/16 18:04:46 by jisookim          #+#    #+#             */
+/*   Updated: 2022/08/16 18:05:06 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-int	philo_create_thread(t_info *info)
-{
-	int i;
-
-	i = 0;
-	gettimeofday(&info->start_time, 0);
-	while (i < info->num_philo)
-	{
-		if (pthread_create(&info->t_philo[i], 0, philo_run, &info->philos[i]))
-			return (RET_ERROR);
-		i++;
-	}
-	return (OK);
-}
-
-int	philo_collect_all_thread(t_info *info)
+int	philo_init_input(t_info *info)
 {
 	int	i;
+	int	flag;
 
 	i = 0;
+	flag = 0;
 	while (i < info->num_philo)
 	{
-		if (pthread_join(info->t_philo[i], NULL) >= 0)
-			i++;
-		else
-			return (RET_ERROR);
+		memset(&info->philos[i], 0, sizeof(t_philo));
+		info->philos[i].info = (t_info *)malloc(sizeof(t_info));
+		if (!info->philos[i].info)
+		{
+			flag = 1;
+			break ;
+		}
+		info->philos[i].info = info;
+		info->philos[i].eat_count = 0;
+		info->philos[i].id = i;
+		info->philos[i].right_fork = i;
+		info->philos[i].left_fork = (i + 1) % info->num_philo;
+		i++;
 	}
+	if (flag)
+		return (ERROR);
 	return (OK);
 }

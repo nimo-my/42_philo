@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 11:46:26 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/15 21:55:44 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/16 22:50:10 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,13 @@ int	init_info_argv(int argc, char *argv[], t_info *info)
 		info->num_must_eat = p_atoi(argv[5]);
 	else
 		info->num_must_eat = -1;
-	// init values
-	info->flag_starting = 1;
-	
-	if (!info->num_philo || !info->time_to_die || !info->time_to_eat || \
-		!info->time_to_sleep || !info->num_must_eat)
+	if (info->num_philo <= 0 || info->time_to_die <= 0 || \
+		info->time_to_eat <= 0 || info->time_to_sleep <= 0 || \
+		((argc == 6) && info->num_must_eat <= 0))
+	{
+		p_error("ERROR : invalid input!\n");
 		return (RET_ERROR);
+	}
 	return (OK);
 }
 
@@ -54,7 +55,6 @@ int	setting_struct(t_info *info)
 	info->m_fork = malloc(sizeof(pthread_mutex_t) * info->num_philo);
 	if (!info->philos || !info->t_philo || !info->fork || !info->m_fork)
 		return (RET_ERROR); // -1
-	pthread_mutex_init(&(info->m_current_time), 0);
 	pthread_mutex_init(&(info->m_start_time), 0);
 	pthread_mutex_init(&(info->m_flag_die), 0);
 	pthread_mutex_init(&(info->m_everyone_eat), 0);
@@ -62,18 +62,14 @@ int	setting_struct(t_info *info)
 }
 
 
-int	check_argv(int argc, t_info *info)
+int	check_argv(t_info *info)
 {
 	int i;
 	int flag;
 
 	i = 0;
 	flag = 0;
-	if (info->num_philo <= 0 || info->time_to_die <= 0 || \
-		info->time_to_eat <= 0 || info->time_to_sleep <= 0)
-			flag = p_error("ERROR : input value needs to be over 0.");
-	if ((argc == 6) && info->num_must_eat <= 0)
-		flag = p_error("ERROR : input value needs to be over 0.");
+	
 	if (pthread_mutex_init(&(info->m_print), 0)) //thread init
 		flag = p_error("ERROR : thread initialize error");
 	while (i < info->num_philo)
@@ -81,6 +77,8 @@ int	check_argv(int argc, t_info *info)
 		info->fork[i] = 1;
 		if (pthread_mutex_init(&info->m_fork[i], 0)) //init fork
 			flag = p_error("ERROR : mutex initialize error");
+		if (flag == RET_ERROR)
+			return (RET_ERROR);
 		i++;
 	}
 	if (flag == RET_ERROR)

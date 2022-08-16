@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 18:18:43 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/15 22:47:19 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/16 22:49:51 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,24 +34,9 @@
 # define PHIL_DIE	0
 # define RET_ERROR	-1
 
-// # define BEF_SEC_0	0
-// # define BEF_SEC_1	1
-// # define BEF_SEC_2	2
-// # define BEF_SEC_3	3
-
 /* ************************************************************************** */
 // 	STRUCTURE
 /* ************************************************************************** */
-
-// enum	THD_ERR_MSG
-// {
-// 	CREATE = 2,
-// 	JOIN,
-// 	MUTEX_INIT,
-// 	MUTEX_DESTROY,
-// 	MUTEX_LOCK,
-// 	MUTEX_UNLOCK
-// };
 
 enum STATE
 {
@@ -60,8 +45,7 @@ enum STATE
 	SLEEP,
 	THINK,
 	DEAD,
-	EAT_ALL,
-	EAT_MORE
+	EAT_ALL
 };
 
 typedef struct s_philo
@@ -78,7 +62,7 @@ typedef struct s_philo
 	int					eat_count;
 	pthread_mutex_t		m_eat_count;
 
-	int	flag_eat_all;
+	int					flag_eat_all;
 	pthread_mutex_t		m_flag_eat_all;
 
 }				t_philo;
@@ -101,12 +85,8 @@ typedef struct s_info
 	int	flag_die;
 	pthread_mutex_t		m_flag_die;
 
-	int					flag_starting;
 	struct timeval		start_time;
 	pthread_mutex_t		m_start_time; // create thread 때 측정
-
-	struct timeval		current_time;
-	pthread_mutex_t		m_current_time;
 
 	int					*fork;
 	pthread_mutex_t		*m_fork; // init in set_info_struct
@@ -132,36 +112,33 @@ size_t	p_strlen(const char *str);
 t_info	*make_info_struct(int argc, char *argv[]);
 int		init_info_argv(int argc, char *argv[], t_info *info);
 int		setting_struct(t_info *info);
-int		check_argv(int argc, t_info *info);
+int		check_argv(t_info *info);
 
-// main.c
-
+// philo_input.c
+int		philo_init_input(t_info *info);
 
 // monitor.c
-int		check_philo_starve(t_info *info, int i);
-int		check_philo_eat_all(t_info *info, int i);
+int		check_philo_dead(t_info *info, t_philo *p);
 int		monitor(t_info *info);
 
 // philo_fork.c
 void	grab_fork(t_info *info, t_philo *p);
 void	put_down_fork(t_info *info, t_philo *p);
 
-
 // philo_thread.c
-int		philo_init_input(t_info *info);
 int		philo_create_thread(t_info *info);
 int		philo_collect_all_thread(t_info *info);
 
 // philo_run.c
 void	*philo_run(void *arg);
-int		check_philo_dead(t_info *info, t_philo *p);
-int		philo_eat(t_info *info, t_philo *p);
+void	philo_day_running(t_philo *p);
+void		philo_eat(t_info *info, t_philo *p);
 void	philo_sleep(t_info *info, t_philo *p);
 void	philo_think(t_info *info, t_philo *p);
 
 // time.c
-void	check_curr_time(t_info *info);
-void	custom_usleep_timer(int input_time);
+struct timeval	check_curr_time(t_info *info);
+void	custom_usleep_timer(struct timeval *start, int input_time);
 int		time_gap(struct timeval start_time, struct timeval end_time);
 
 //voice.c
