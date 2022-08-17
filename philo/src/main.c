@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 20:10:57 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/17 14:45:00 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/17 21:12:21 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,9 @@ int	philo_init_input(t_info *info)
 
 int	philo_create_thread(t_info *info)
 {
-	int i;
+	int	i;
 
 	i = 0;
-
 	while (i < info->num_philo)
 	{
 		gettimeofday(&info->start_time, 0);
@@ -67,18 +66,18 @@ int	philo_collect_all_thread(t_info *info)
 
 int	philo(t_info *info)
 {
-	int gap;
+	int				gap;
 	struct timeval	curr;
-	int ret_monitor;
+	int				ret_monitor;
 
 	if (philo_init_input(info) == RET_ERROR)
 		return (RET_ERROR);
-	if (philo_create_thread(info) == RET_ERROR) // 스레드 생성
+	if (philo_create_thread(info) == RET_ERROR)
 		return (RET_ERROR);
 	ret_monitor = monitor(info);
 	gettimeofday(&curr, NULL);
 	gap = time_gap(info->start_time, curr);
-	if (ret_monitor == -1) //everyone eat all
+	if (ret_monitor == -1)
 		printf("== philo eat all. dinning end! ==\n");
 	else
 		printf("[%d] philo %d died\n", gap, ret_monitor);
@@ -87,7 +86,7 @@ int	philo(t_info *info)
 	return (0);
 }
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
 	t_info	*info;
 
@@ -97,6 +96,5 @@ int main(int argc, char *argv[])
 	if (philo(info) == RET_ERROR)
 		return (RET_ERROR);
 	end_philo(info);
-
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 16:00:25 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/17 14:14:07 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/17 21:13:11 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	grab_fork(t_info *info, t_philo *p)
 void	philo_eat(t_info *info, t_philo *p)
 {
 	struct timeval	time;
-	int	eat_count;
+	int				eat_count;
 
 	voice(EAT, info, p);
 	gettimeofday(&time, NULL);
@@ -53,7 +53,6 @@ void	philo_eat(t_info *info, t_philo *p)
 		p->flag_eat_all = 1;
 		pthread_mutex_unlock(&p->m_flag_eat_all);
 	}
-
 }
 
 void	put_down_fork(t_info *info, t_philo *p)

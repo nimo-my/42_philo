@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 20:34:46 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/17 14:29:50 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/17 21:39:40 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,22 @@ void	*philo_run(void *arg)
 	return (NULL);
 }
 
+int	day_running_check_die(int die, t_philo *p)
+{
+	pthread_mutex_lock(&p->info->m_flag_die);
+	die = p->info->flag_die;
+	pthread_mutex_unlock(&p->info->m_flag_die);
+	return (die);
+}
+
+int	day_running_check_eat_all(int eat_all, t_philo *p)
+{
+	pthread_mutex_lock(&p->m_flag_eat_all);
+	eat_all = p->flag_eat_all;
+	pthread_mutex_unlock(&p->m_flag_eat_all);
+	return (eat_all);
+}
+
 void	philo_day_running(t_philo *p)
 {
 	int	die;
@@ -41,22 +57,17 @@ void	philo_day_running(t_philo *p)
 	eat_all = 0;
 	while (1)
 	{
-		pthread_mutex_lock(&p->info->m_flag_die);
-		die = p->info->flag_die;
-		pthread_mutex_unlock(&p->info->m_flag_die);
+		die = day_running_check_die(die, p);
 		if (die)
 			break ;
 		grab_fork(p->info, p);
 		philo_eat(p->info, p);
 		put_down_fork(p->info, p);
-		pthread_mutex_lock(&p->m_flag_eat_all);
-		eat_all = p->flag_eat_all;
-		pthread_mutex_unlock(&p->m_flag_eat_all);
+		eat_all = day_running_check_eat_all(eat_all, p);
 		if (eat_all)
 			break ;
 		philo_sleep(p->info, p);
 		philo_think(p->info, p);
-
 	}
 	if (!die)
 	{

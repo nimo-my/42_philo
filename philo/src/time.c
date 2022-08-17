@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 22:42:52 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/17 11:46:04 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/17 21:32:01 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	custom_usleep_timer(struct timeval *start, int sleep_time)
 {
-	struct timeval now;
+	struct timeval	now;
 
 	gettimeofday(&now, 0);
 	while (time_gap(*start, now) < sleep_time)

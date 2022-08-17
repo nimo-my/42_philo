@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 11:46:26 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/17 11:57:05 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/17 21:14:31 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_info	*make_info_struct(int argc, char *argv[])
 {
-	t_info *info;
+	t_info	*info;
 
 	if (!(argc == 5 || argc == 6))
 		return (0);
@@ -54,7 +54,7 @@ int	setting_struct(t_info *info)
 	info->fork = malloc(sizeof(int) * info->num_philo);
 	info->m_fork = malloc(sizeof(pthread_mutex_t) * info->num_philo);
 	if (!info->philos || !info->t_philo || !info->fork || !info->m_fork)
-		return (RET_ERROR); // -1
+		return (RET_ERROR);
 	if (pthread_mutex_init(&(info->m_everyone_eat), 0) || \
 		pthread_mutex_init(&(info->m_flag_die), 0) || \
 		pthread_mutex_init(&(info->m_start_time), 0) || \
@@ -64,16 +64,15 @@ int	setting_struct(t_info *info)
 	return (OK);
 }
 
-
 int	check_argv(t_info *info)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < info->num_philo)
 	{
 		info->fork[i] = 1;
-		if (pthread_mutex_init(&info->m_fork[i], 0)) //init fork
+		if (pthread_mutex_init(&info->m_fork[i], 0))
 		{
 			p_error("ERROR : mutex initialize error");
 			return (RET_ERROR);

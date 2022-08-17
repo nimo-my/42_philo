@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 01:48:10 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/17 13:59:58 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/17 21:14:56 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ int	check_philo_dead(t_info *info, t_philo *p)
 		voice(DEAD, info, p);
 		return (p->id);
 	}
-		return (-1);
+	return (-1);
 }
 
 int	monitor(t_info *info)
 {
 	int	i;
-	int count_everyone_eat;
+	int	count_everyone_eat;
 	int	must_eat;
 
 	i = 0;
@@ -54,5 +54,5 @@ int	monitor(t_info *info)
 			return (-1);
 		i = 0;
 	}
-	return (info->philos[i].id + 1); // dead philo's thread
+	return (info->philos[i].id + 1);
 }
