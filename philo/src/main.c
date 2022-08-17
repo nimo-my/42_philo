@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 20:10:57 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/17 14:36:57 by jisookim         ###   ########seoul.kr  */
+/*   Updated: 2022/08/17 14:45:00 by jisookim         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ int	philo_collect_all_thread(t_info *info)
 
 int	philo(t_info *info)
 {
+	int gap;
+	struct timeval	curr;
 	int ret_monitor;
 
 	if (philo_init_input(info) == RET_ERROR)
@@ -74,11 +76,12 @@ int	philo(t_info *info)
 	if (philo_create_thread(info) == RET_ERROR) // 스레드 생성
 		return (RET_ERROR);
 	ret_monitor = monitor(info);
-
+	gettimeofday(&curr, NULL);
+	gap = time_gap(info->start_time, curr);
 	if (ret_monitor == -1) //everyone eat all
 		printf("== philo eat all. dinning end! ==\n");
 	else
-		printf("== philo %d died. dinning end! ==\n", ret_monitor);
+		printf("[%d] philo %d died\n", gap, ret_monitor);
 	if (philo_collect_all_thread(info) == RET_ERROR)
 		return (RET_ERROR);
 	return (0);
