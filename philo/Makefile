@@ -6,16 +6,16 @@
 #    By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/30 18:14:43 by jisookim          #+#    #+#              #
-#    Updated: 2022/08/17 10:15:38 by jisookim         ###   ########.fr        #
+#    Updated: 2022/08/17 14:20:32 by jisookim         ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
 CC			:=	cc
-CFLAGS		:=	-Wall -Wextra -Werror 
+SANITIZE	:=	-fsanitize=thread -g3
+CFLAGS		:=	-Wall -Wextra -Werror
 RM			:=	rm -f
 AR			:=	ar
 ARFLAGS		:=	rcus
-SANITIZE	:=	-fsanitize=thread -g3
 
 NAME		:=	philo
 
@@ -24,7 +24,7 @@ SRCS_DIR	:=	./src
 SRCS		:=	main.c \
 				init_info.c \
 				philo_action.c \
-				philo_end.c \
+				end.c \
 				philo_run.c \
 				time.c \
 				monitor.c \

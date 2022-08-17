@@ -6,22 +6,34 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 15:58:25 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/17 10:05:01 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/17 14:37:02 by jisookim         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	voice(enum STATE state, t_info *info, t_philo *p)
+int	check_voice(t_info *info)
 {
-	int gap;
 	int	die;
-	struct timeval	curr;
+	int	eat_all;
 
 	pthread_mutex_lock(&info->m_flag_die);
 	die = info->flag_die;
 	pthread_mutex_unlock(&info->m_flag_die);
-	if (die)
+	pthread_mutex_lock(&info->m_must_eat_all_flag);
+	eat_all = info->must_eat_all_flag;
+	pthread_mutex_unlock(&info->m_must_eat_all_flag);
+	if (die || eat_all)
+		return (1);
+	return (0);
+}
+
+void	voice(enum STATE state, t_info *info, t_philo *p)
+{
+	struct timeval	curr;
+	int gap;
+
+	if (check_voice(info))
 		return ;
 	gettimeofday(&curr, NULL);
 	gap = time_gap(info->start_time, curr);

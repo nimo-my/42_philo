@@ -6,20 +6,20 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 22:42:52 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/16 22:49:24 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/17 11:46:04 by jisookim         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	custom_usleep_timer(struct timeval *start, int input_time)
+void	custom_usleep_timer(struct timeval *start, int sleep_time)
 {
 	struct timeval now;
 
 	gettimeofday(&now, 0);
-	while (time_gap(*start, now) < input_time)
+	while (time_gap(*start, now) < sleep_time)
 	{
-		usleep(1000);
+		usleep(300);
 		gettimeofday(&now, 0);
 	}
 }

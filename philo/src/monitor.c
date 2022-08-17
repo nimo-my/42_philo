@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 01:48:10 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/17 10:07:58 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/17 13:59:58 by jisookim         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	check_philo_dead(t_info *info, t_philo *p)
 {
 	struct timeval	curr;
 
-	gettimeofday(&curr, NULL);
+	gettimeofday(&curr, 0);
 	if (time_gap(p->current_eat, curr) > info->time_to_die)
 	{
 		pthread_mutex_lock(&info->m_flag_die);
@@ -25,25 +25,34 @@ int	check_philo_dead(t_info *info, t_philo *p)
 		voice(DEAD, info, p);
 		return (p->id);
 	}
-		return (OK);
+		return (-1);
 }
 
 int	monitor(t_info *info)
 {
 	int	i;
 	int count_everyone_eat;
+	int	must_eat;
 
 	i = 0;
+	must_eat = 0;
 	while (1)
 	{
 		if (check_philo_dead(info, &info->philos[i]) == info->philos[i].id)
-			return (info->philos[i].id); // dead philo's thread
+			break ;
 		pthread_mutex_lock(&(info->m_everyone_eat));
 		count_everyone_eat = info->count_everyone_eat;
 		pthread_mutex_unlock(&(info->m_everyone_eat));
-		if (info->count_everyone_eat == info->num_philo)
-			return (EAT_ALL);
+		if (count_everyone_eat == info->num_philo)
+		{
+			pthread_mutex_lock(&(info->m_must_eat_all_flag));
+			info->must_eat_all_flag = 1;
+			must_eat = info->must_eat_all_flag;
+			pthread_mutex_unlock(&(info->m_must_eat_all_flag));
+		}
+		if (must_eat == 1)
+			return (-1);
 		i = 0;
 	}
-	return (1);
+	return (info->philos[i].id + 1); // dead philo's thread
 }
