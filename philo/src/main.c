@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/31 20:10:57 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/17 21:12:21 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/17 22:09:32 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,6 @@ int	philo_init_input(t_info *info)
 	while (i < info->num_philo)
 	{
 		memset(&info->philos[i], 0, sizeof(t_philo));
-		info->philos[i].info = (t_info *)malloc(sizeof(t_info));
-		if (!info->philos[i].info)
-			return (RET_ERROR);
 		info->philos[i].info = info;
 		info->philos[i].eat_count = 0;
 		info->philos[i].id = i;

@@ -6,16 +6,16 @@
 #    By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/30 18:14:43 by jisookim          #+#    #+#              #
-#    Updated: 2022/08/17 14:20:32 by jisookim         ###   ########seoul.kr   #
+#    Updated: 2022/08/17 22:12:24 by jisookim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC			:=	cc
-SANITIZE	:=	-fsanitize=thread -g3
 CFLAGS		:=	-Wall -Wextra -Werror
 RM			:=	rm -f
 AR			:=	ar
 ARFLAGS		:=	rcus
+SANITIZE	:=	-fsanitize=address -g3
 
 NAME		:=	philo
 

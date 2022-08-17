@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/15 18:49:51 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/17 21:40:11 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/17 22:09:20 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,11 @@ void	end_philo(t_info *info)
 		pthread_mutex_destroy(&info->philos[i].m_eat_count);
 		pthread_mutex_destroy(&info->philos[i].m_flag_eat_all);
 		pthread_mutex_destroy(&(info->m_fork[i]));
-		free(info->philos[i].info);
 		i++;
 	}
-	free(info->fork);
+	free(info->t_philo);
 	free(info->m_fork);
+	free(info->fork);
+	free(info->philos);
 	free(info);
 }
