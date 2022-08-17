@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 18:18:43 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/16 22:49:51 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/17 10:13:02 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # define ERROR		0
 # define PHIL_DIE	0
 # define RET_ERROR	-1
+# define EAT_ALL	2
 
 /* ************************************************************************** */
 // 	STRUCTURE
@@ -44,8 +45,7 @@ enum STATE
 	EAT,
 	SLEEP,
 	THINK,
-	DEAD,
-	EAT_ALL
+	DEAD
 };
 
 typedef struct s_philo
@@ -80,7 +80,7 @@ typedef struct s_info
 
 
 	t_philo				*philos;
-	pthread_t			*t_philo; // init in set_info_struct
+	pthread_t			*t_philo; // pthread create 할 때 사용될 스레드 식별자
 
 	int	flag_die;
 	pthread_mutex_t		m_flag_die;
@@ -113,17 +113,17 @@ t_info	*make_info_struct(int argc, char *argv[]);
 int		init_info_argv(int argc, char *argv[], t_info *info);
 int		setting_struct(t_info *info);
 int		check_argv(t_info *info);
-
-// philo_input.c
 int		philo_init_input(t_info *info);
 
 // monitor.c
-int		check_philo_dead(t_info *info, t_philo *p);
 int		monitor(t_info *info);
 
-// philo_fork.c
+// philo_action.c
 void	grab_fork(t_info *info, t_philo *p);
 void	put_down_fork(t_info *info, t_philo *p);
+void	philo_eat(t_info *info, t_philo *p);
+void	philo_sleep(t_info *info, t_philo *p);
+void	philo_think(t_info *info, t_philo *p);
 
 // philo_thread.c
 int		philo_create_thread(t_info *info);
@@ -132,9 +132,7 @@ int		philo_collect_all_thread(t_info *info);
 // philo_run.c
 void	*philo_run(void *arg);
 void	philo_day_running(t_philo *p);
-void		philo_eat(t_info *info, t_philo *p);
-void	philo_sleep(t_info *info, t_philo *p);
-void	philo_think(t_info *info, t_philo *p);
+
 
 // time.c
 struct timeval	check_curr_time(t_info *info);

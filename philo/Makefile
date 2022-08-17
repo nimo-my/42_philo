@@ -6,7 +6,7 @@
 #    By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/30 18:14:43 by jisookim          #+#    #+#              #
-#    Updated: 2022/08/16 22:14:51 by jisookim         ###   ########.fr        #
+#    Updated: 2022/08/17 10:15:38 by jisookim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,11 +23,9 @@ NAME		:=	philo
 SRCS_DIR	:=	./src
 SRCS		:=	main.c \
 				init_info.c \
-				philo_fork.c \
-				philo_thread.c \
+				philo_action.c \
 				philo_end.c \
 				philo_run.c \
-				philo_input.c \
 				time.c \
 				monitor.c \
 				voice.c

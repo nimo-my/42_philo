@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/06 20:34:46 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/16 21:52:20 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/17 10:16:08 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,7 @@ void	*philo_run(void *arg)
 	p = (t_philo *)arg;
 	if ((p->id) % 2 != 0)
 		usleep(100);
-	if (p->info->num_must_eat)
-		philo_day_running(p);
-	else
-		philo_day_running(p);
+	philo_day_running(p);
 	return (NULL);
 }
 
@@ -43,34 +40,7 @@ void	philo_day_running(t_philo *p)
 		philo_sleep(p->info, p);
 		philo_think(p->info, p);
 	}
-}
-
-void	philo_eat(t_info *info, t_philo *p)
-{
-	struct timeval	time;
-
-	voice(EAT, info, p);
-	gettimeofday(&time, NULL);
-	// pthread_mutex_lock(&p->m_current_eat);
-	p->current_eat = time;
-	// pthread_mutex_unlock(&p->m_current_eat);
-	custom_usleep_timer(&time, info->time_to_eat);
-	p->eat_count++; // todo: data race
-	if (p->eat_count == info->num_must_eat) // check philo eat all
-		voice(EAT_ALL, info, p);
-}
-
-void	philo_sleep(t_info *info, t_philo *p)
-{
-	struct timeval	time;
-
-	gettimeofday(&time, NULL);
-	voice(SLEEP, info, p);
-	custom_usleep_timer(&time, info->time_to_sleep);
-}
-
-void	philo_think(t_info *info, t_philo *p)
-{
-	voice(THINK, info, p);
-	usleep(100);
+	pthread_mutex_lock(&p->info->m_everyone_eat);
+	p->info->count_everyone_eat++;
+	pthread_mutex_unlock(&p->info->m_everyone_eat);
 }

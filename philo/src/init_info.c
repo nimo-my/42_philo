@@ -6,7 +6,7 @@
 /*   By: jisookim <jisookim@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 11:46:26 by jisookim          #+#    #+#             */
-/*   Updated: 2022/08/16 22:50:10 by jisookim         ###   ########.fr       */
+/*   Updated: 2022/08/17 10:08:40 by jisookim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,26 @@ int	check_argv(t_info *info)
 	}
 	if (flag == RET_ERROR)
 		return (RET_ERROR);
+	return (OK);
+}
+
+int	philo_init_input(t_info *info)
+{
+	int	i;
+
+	i = 0;
+	while (i < info->num_philo)
+	{
+		memset(&info->philos[i], 0, sizeof(t_philo));
+		info->philos[i].info = (t_info *)malloc(sizeof(t_info));
+		if (!info->philos[i].info)
+			return (ERROR);
+		info->philos[i].info = info;
+		info->philos[i].eat_count = 0;
+		info->philos[i].id = i;
+		info->philos[i].right_fork = i;
+		info->philos[i].left_fork = (i + 1) % info->num_philo;
+		i++;
+	}
 	return (OK);
 }
